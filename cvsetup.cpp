@@ -12,7 +12,13 @@ void DrawGrid(Mat& image, int size);
 void onSizeChange(int, void*);
 
 int main(int argc, char** argv) {
-  image = imread("test.png");
+
+  if (argc < 1) {
+    cout << "Usage: cvsetup <path to image>" << endl;
+    return 0;
+  }
+
+  image = imread(argv[1]);
 
   if (!image.data) {
     printf("No image data \n");
@@ -86,18 +92,18 @@ void DrawGrid(Mat& img, int gsize) {
   int nCols = img.cols;
   
   Point2i p1(0,0);
-  Point2i p2(0,nCols);
+  Point2i p2(0,nRows);
   Point2i stepx(gsize, 0);
-  for (int i = gsize; i < nRows; i += gsize)
+  for (int i = gsize; i < nCols; i += gsize)
   {
     p1 += stepx; p2+=stepx;
     line(img, p1, p2, CV_RGB(255, 0, 255), 1, CV_AA, 0);
   }
 
   p1 = Point2i(0, 0);
-  p2 = Point2i(nRows,0);
+  p2 = Point2i(nCols,0);
   Point2i stepy(0, gsize);
-  for (int i = gsize; i < nCols; i += gsize)
+  for (int i = gsize; i < nRows; i += gsize)
   {
     p1 += stepy; p2+= stepy;
     line(img, p1, p2, CV_RGB(255, 0, 255), 1, CV_AA, 0);
