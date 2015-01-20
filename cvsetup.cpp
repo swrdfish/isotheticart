@@ -4,7 +4,7 @@
 using namespace cv;
 using namespace std;
 
-int size = 0;
+int size = 0, threshval= 200;
 Mat image, result, final;
 
 Point2i getTopLeftPoint(Mat& image);
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
   cvtColor(image, result, CV_RGB2GRAY);
 
   // Binarise the image
-  threshold(result, result, 200, 255, CV_THRESH_BINARY);
+  threshold(result, result, threshval, 255, CV_THRESH_BINARY);
 
   // Draw the grid
   final = image.clone();
@@ -43,6 +43,7 @@ int main(int argc, char** argv) {
 
   // Create a trakbar to control the grid size
   createTrackbar( "Grid size", "Final image", &size, 50, onSizeChange);
+  createTrackbar( "Threshold", "Final image", &threshval, 255, onSizeChange);
   waitKey(0);
 
   cout << getTopLeftPoint(result) << endl;
@@ -111,7 +112,12 @@ void DrawGrid(Mat& img, int gsize) {
 }
 
 void onSizeChange(int, void *){
+
   final = image.clone();
+  cvtColor(image, result, CV_RGB2GRAY);
+  threshold(result, result, threshval, 255, CV_THRESH_BINARY);
+
   DrawGrid(final, size);
+  imshow("Intermediate image", result);
   imshow("Final image", final);
 }
