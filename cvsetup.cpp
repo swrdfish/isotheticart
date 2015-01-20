@@ -4,10 +4,14 @@
 using namespace cv;
 using namespace std;
 
+int size = 0;
+Mat image, result, final;
+
 Point2i getTopLeftPoint(Mat& image);
+void DrawGrid(Mat& image, int size);
+void onSizeChange(int, void*);
 
 int main(int argc, char** argv) {
-  Mat image, result;
   image = imread("test.png");
 
   if (!image.data) {
@@ -21,11 +25,19 @@ int main(int argc, char** argv) {
   // Binarise the image
   threshold(result, result, 200, 255, CV_THRESH_BINARY);
 
-  // Display the binary image
-  namedWindow("Display Image", CV_WINDOW_AUTOSIZE);
-  imshow("Display Image", result);
-  waitKey(0);
+  // Draw the grid
+  final = image.clone();
+  DrawGrid(final, 5);
 
+  // Display the binary image
+  namedWindow("Intermediate image", CV_WINDOW_AUTOSIZE);
+  namedWindow("Final image", CV_WINDOW_AUTOSIZE);
+  imshow("Intermediate image", result);
+  imshow("Final image", final);
+
+  // Create a trakbar to control the grid size
+  createTrackbar( "Grid size", "Final image", &size, 50, onSizeChange);
+  waitKey(0);
 
   cout << getTopLeftPoint(result) << endl;
 
@@ -44,54 +56,56 @@ Point2i getTopLeftPoint(Mat& image) {
     nRows = 1;
   }
 
-  int i, j;
   uchar* p;
+
   for (int i = 0; i < nRows; ++i) {
     p = image.ptr(i);
     for (int j = 0; j < nCols; ++j) {
       // Check for black pixel
-      if(p[j] == 0){
-        if (image.isContinuous()){
-            nRows = image.rows;
-            Point2i P(j/nRows, j%nRows);
-            return P;
-        }
-        else{
-            Point2i P(i, j);            
-            return P;
+      if (p[j] == 0) {
+        if (image.isContinuous()) {
+          nRows = image.rows;
+          Point2i P(j / nRows, j % nRows);
+          return P;
+        } else {
+          Point2i P(i, j);
+          return P;
         }
       }
     }
   }
-  Point2i P(0,0);
+
+  Point2i P(-1, -1);
   return P;
 }
 
-// Mat& ScanImageAndReduceC(Mat& I, const uchar* const table)
-// {
-// // accept only char type matrices
-// CV_Assert(I.depth() != sizeof(uchar));
+void DrawGrid(Mat& img, int gsize) {
+  if (gsize < 1)
+    return;
+  int nRows = img.rows;
+  int nCols = img.cols;
+  
+  Point2i p1(0,0);
+  Point2i p2(0,nCols);
+  Point2i stepx(gsize, 0);
+  for (int i = gsize; i < nRows; i += gsize)
+  {
+    p1 += stepx; p2+=stepx;
+    line(img, p1, p2, CV_RGB(255, 0, 255), 1, CV_AA, 0);
+  }
 
-//     int channels = I.channels();
+  p1 = Point2i(0, 0);
+  p2 = Point2i(nRows,0);
+  Point2i stepy(0, gsize);
+  for (int i = gsize; i < nCols; i += gsize)
+  {
+    p1 += stepy; p2+= stepy;
+    line(img, p1, p2, CV_RGB(255, 0, 255), 1, CV_AA, 0);
+  }
+}
 
-//     int nRows = I.rows;
-//     int nCols = I.cols * channels;
-
-//     if (I.isContinuous())
-//     {
-//         nCols *= nRows;
-//         nRows = 1;
-//     }
-
-//     int i,j;
-//     uchar* p;
-//     for( i = 0; i < nRows; ++i)
-//     {
-//         p = I.ptr<uchar>(i);
-//         for ( j = 0; j < nCols; ++j)
-//         {
-//             p[j] = table[p[j]];
-//         }
-//     }
-//     return I;
-// }
+void onSizeChange(int, void *){
+  final = image.clone();
+  DrawGrid(final, size);
+  imshow("Final image", final);
+}
