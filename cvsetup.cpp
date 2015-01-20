@@ -1,15 +1,20 @@
 #include <stdio.h>
+#include <math.h>
 #include <opencv2/opencv.hpp>
+// #include "makeoip.hpp"
 
 using namespace cv;
 using namespace std;
 
-int size = 0, threshval= 200;
+int size = 10, threshval= 200;
 Mat image, result, final;
 
 Point2i getTopLeftPoint(Mat& image);
 void DrawGrid(Mat& image, int size);
 void onSizeChange(int, void*);
+Point2i getStartPoint(Mat& img, Point2i p, int gsize);
+int getPointType(Mat& img, Point2i q, int gsize);
+bool ObjectInUGB(Mat& img, Point2i q, int ugb, int gsize);
 
 int main(int argc, char** argv) {
 
@@ -33,7 +38,7 @@ int main(int argc, char** argv) {
 
   // Draw the grid
   final = image.clone();
-  DrawGrid(final, 5);
+  DrawGrid(final, 10);
 
   // Display the binary image
   namedWindow("Intermediate image", CV_WINDOW_AUTOSIZE);
@@ -46,8 +51,11 @@ int main(int argc, char** argv) {
   createTrackbar( "Threshold", "Final image", &threshval, 255, onSizeChange);
   waitKey(0);
 
-  cout << getTopLeftPoint(result) << endl;
-
+  Point2i p = getTopLeftPoint(result);
+  cout << p << endl;
+  p = getStartPoint(result, p, size);
+  cout << p << endl;
+  cout << getPointType(result, p, size) << endl;
   return 0;
 }
 
@@ -120,4 +128,72 @@ void onSizeChange(int, void *){
   DrawGrid(final, size);
   imshow("Intermediate image", result);
   imshow("Final image", final);
+}
+
+Point2i getStartPoint(Mat& img, Point2i p, int gsize){
+  int qx, qy;
+  qx = (ceil(float(p.x)/gsize) -1)*gsize;
+  qy = (floor(float(p.y)/gsize))*gsize;
+  Point2i q(qx, qy);
+  return q;
+}
+
+int getPointType(Mat& img, Point2i q, int gsize){
+  int m=0, r=0, t=10;
+  for(int k=0; k<5; k++){
+    if( ObjectInUGB(img, q, k, gsize)){
+      m++; 
+      r += k;
+      cout << "debug info: inside" << endl;
+    }
+  }
+  if (m = 2 && (r == 4 || r == 6)) {
+    t = -2; 
+  }
+  else if (m == 0 || m == 4){
+    t = 0;
+    // cout << "debug info: " << m << endl;
+  }
+  else {
+    t = 2 - m;
+  }
+  return t;
+}
+
+bool ObjectInUGB(Mat& img, Point2i q, int ugb, int gsize){
+  Point2i pt;
+  switch (ugb){
+    case 1: 
+      pt.x = q.x;
+      pt.y = q.y - gsize;
+      // cout << "debug info: 1 " << pt << endl;
+      break;
+    case 2:
+      pt.x = q.x -gsize;
+      pt.y = q.y - gsize;
+      // cout << "debug info: 2 " << pt << endl;
+      break;
+    case 3:
+      pt.x = q.x - gsize;
+      pt.y = q.y;
+      // cout << "debug info: 3 " << pt << endl;
+      break;
+    case 4:
+      pt.x = q.x;
+      pt.y = q.y;
+      // cout << "debug info: 4 " << pt << endl;
+      break;
+    default:
+      break;
+  }
+  uchar *p;
+  for(int i=pt.x; i < pt.x + gsize; i++){
+    p = img.ptr(i);
+    for (int j = pt.y; j < pt.y + gsize; ++j)
+    {
+      if(p[j] == 0)
+        return false;
+    }
+  }
+  return true;
 }
