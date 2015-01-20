@@ -87,7 +87,7 @@ Point2i getTopLeftPoint(Mat& image) {
 }
 
 void DrawGrid(Mat& img, int gsize) {
-  if (gsize < 1)
+  if (gsize < 2)
     return;
   int nRows = img.rows;
   int nCols = img.cols;
