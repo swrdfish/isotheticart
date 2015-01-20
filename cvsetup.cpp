@@ -13,7 +13,7 @@ void onSizeChange(int, void*);
 
 int main(int argc, char** argv) {
 
-  if (argc < 1) {
+  if (argc < 2) {
     cout << "Usage: cvsetup <path to image>" << endl;
     return 0;
   }
