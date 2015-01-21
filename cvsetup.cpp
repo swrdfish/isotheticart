@@ -151,10 +151,10 @@ int getPointType(Mat& img, Point2i q, int gsize) {
     if (ObjectInUGB(img, q, k, gsize)) {
       m++;
       r += k;
-      cout << "debug info: inside" << endl;
+      // cout << "debug info: inside" << endl;
     }
   }
-  if (m = 2 && (r == 4 || r == 6)) {
+  if (m == 2 && (r == 4 || r == 6)) {
     t = -2;
   } else if (m == 0 || m == 4) {
     t = 0;
@@ -192,16 +192,16 @@ bool ObjectInUGB(Mat& img, Point2i q, int ugb, int gsize) {
       break;
   }
   uchar* p;
-  for (int i = pt.y; i < pt.y + gsize; i++) {
+  for (int i = pt.y; i <= pt.y + gsize; i++) {
     p = img.ptr(i);
-    for (int j = pt.x; j < pt.x + gsize; ++j) {
+    for (int j = pt.x; j <= pt.x + gsize; ++j) {
       // cout << "(" << i <<"," << j << ")" << int(p[j]);
       if (p[j] == 0) {
-        return false;
+        return true;
       }
     }
   }
-  return true;
+  return false;
 }
 
 Point2i getNextPoint(Point2i currentpoint, int d, int gsize) {
@@ -213,7 +213,7 @@ Point2i getNextPoint(Point2i currentpoint, int d, int gsize) {
       break;
     case 1:
       nextpoint.x = currentpoint.x;
-      nextpoint.y = currentpoint.y + gsize;
+      nextpoint.y = currentpoint.y - gsize;
       break;
     case 2:
       nextpoint.x = currentpoint.x - gsize;
@@ -221,7 +221,7 @@ Point2i getNextPoint(Point2i currentpoint, int d, int gsize) {
       break;
     case 3:
       nextpoint.x = currentpoint.x;
-      nextpoint.y = currentpoint.y - gsize;
+      nextpoint.y = currentpoint.y + gsize;
       break;
   }
   return nextpoint;
@@ -242,6 +242,7 @@ vector<Point2i> makeOIP(Mat& img, Point2i topleftpoint, int gsize) {
   waitKey(1000);
 
   do {
+    cout << q << " type: " << type << " direction: " << d <<endl;
     if (type == 1 || type == -1) {
       vertices.push_back(q);
       circle(steps, q, 3, CV_RGB(255, 0, 0), 1, CV_AA, 0);
@@ -253,10 +254,15 @@ vector<Point2i> makeOIP(Mat& img, Point2i topleftpoint, int gsize) {
       type = -1;
     }
     d = (d + type) % 4;
+    if (d < 0){
+      d += 4;
+    }
     imshow("Final image", steps);
-    c = waitKey(1000);
+    c = waitKey(500);
     if (c == 113)
       break;
+    else if(c == 112)
+      waitKey(0);
   } while (q != startpoint);
   return vertices;
 }
