@@ -228,6 +228,7 @@ Point2i getNextPoint(Point2i currentpoint, int d, int gsize) {
 }
 
 vector<Point2i> makeOIP(Mat& img, Point2i topleftpoint, int gsize) {
+  char c;
   vector<Point2i> vertices;
   Point2i startpoint = getStartPoint(img, topleftpoint, gsize);
   Point2i q = startpoint;
@@ -253,7 +254,9 @@ vector<Point2i> makeOIP(Mat& img, Point2i topleftpoint, int gsize) {
     }
     d = (d + type) % 4;
     imshow("Final image", steps);
-    waitKey(1000);
+    c = waitKey(1000);
+    if (c == 113)
+      break;
   } while (q != startpoint);
   return vertices;
 }
