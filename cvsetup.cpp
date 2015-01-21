@@ -55,6 +55,7 @@ int main(int argc, char** argv) {
   cout << p << endl;
   p = getStartPoint(result, p, size);
   cout << p << endl;
+  // Point2i arbit(150, 50);
   cout << getPointType(result, p, size) << endl;
   return 0;
 }
@@ -80,7 +81,7 @@ Point2i getTopLeftPoint(Mat& image) {
       if (p[j] == 0) {
         if (image.isContinuous()) {
           nRows = image.rows;
-          Point2i P(j / nRows, j % nRows);
+          Point2i P(j % nRows, j / nRows);
           return P;
         } else {
           Point2i P(i, j);
@@ -140,7 +141,7 @@ Point2i getStartPoint(Mat& img, Point2i p, int gsize){
 
 int getPointType(Mat& img, Point2i q, int gsize){
   int m=0, r=0, t=10;
-  for(int k=0; k<5; k++){
+  for(int k=1; k<5; k++){
     if( ObjectInUGB(img, q, k, gsize)){
       m++; 
       r += k;
@@ -187,12 +188,14 @@ bool ObjectInUGB(Mat& img, Point2i q, int ugb, int gsize){
       break;
   }
   uchar *p;
-  for(int i=pt.x; i < pt.x + gsize; i++){
+  for(int i=pt.y; i < pt.y + gsize; i++){
     p = img.ptr(i);
-    for (int j = pt.y; j < pt.y + gsize; ++j)
+    for (int j = pt.x; j < pt.x + gsize; ++j)
     {
-      if(p[j] == 0)
+      // cout << "(" << i <<"," << j << ")" << int(p[j]);
+      if(p[j] == 0){
         return false;
+      }
     }
   }
   return true;
