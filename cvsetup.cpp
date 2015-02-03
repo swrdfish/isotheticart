@@ -6,13 +6,14 @@
 using namespace cv;
 using namespace std;
 
-int size = 10, threshval = 200;
+int size = 5, threshval = 200;
 Mat image, result, final, steps;
 
 void DrawGrid(Mat& image, int size);
 void onSizeChange(int, void*);
 int getPointType(Mat& img, Point2i q, int gsize);
 bool ObjectInUGB(Mat& img, Point2i q, int ugb, int gsize);
+void drawCover(Mat& img, vector<Point2i> vertices);
 Point2i getTopLeftPoint(Mat& image);
 Point2i getStartPoint(Mat& img, Point2i p, int gsize);
 vector<Point2i> makeOIP(Mat& img, Point2i topleftpoint, int gsize);
@@ -36,11 +37,11 @@ int main(int argc, char** argv) {
   cvtColor(image, result, CV_RGB2GRAY);
 
   // Binarise the image
-  threshold(result, result, threshval, 255, CV_THRESH_BINARY);
+  threshold(result, result, threshval, 255, CV_THRESH_BINARY );
 
   // Draw the grid
   final = image.clone();
-  DrawGrid(final, 10);
+  DrawGrid(final, size);
 
   // Display the binary image
   namedWindow("Intermediate image", CV_WINDOW_AUTOSIZE);
@@ -59,10 +60,13 @@ int main(int argc, char** argv) {
   // Point2i arbit(150, 50);
   // cout << getPointType(result, p, size) << endl;
   Point2i p = getTopLeftPoint(result);
+  cout << p << endl;
   vector<Point2i> isotheticcover = makeOIP(result, p, size);
 
-  cout << isotheticcover << endl;
-  waitKey(1000);
+  // cout << isotheticcover << endl;
+  drawCover(result, isotheticcover);
+  imshow("Intermediate image", result);
+  waitKey(0);
   return 0;
 }
 
@@ -86,11 +90,12 @@ Point2i getTopLeftPoint(Mat& image) {
       // Check for black pixel
       if (p[j] == 0) {
         if (image.isContinuous()) {
-          nRows = image.rows;
-          Point2i P(j % nRows, j / nRows);
+          nCols = image.cols;
+          Point2i P(j % nCols, j / nCols);
           return P;
-        } else {
-          Point2i P(i, j);
+        } 
+        else {
+          Point2i P(j, i);
           return P;
         }
       }
@@ -239,7 +244,7 @@ vector<Point2i> makeOIP(Mat& img, Point2i topleftpoint, int gsize) {
   steps = final.clone();
   circle(steps, q, 1, CV_RGB(0, 255, 100), 1, CV_AA, 0);
   imshow("Final image", steps);
-  waitKey(1000);
+  waitKey(500);
 
   do {
     cout << q << " type: " << type << " direction: " << d <<endl;
@@ -258,11 +263,20 @@ vector<Point2i> makeOIP(Mat& img, Point2i topleftpoint, int gsize) {
       d += 4;
     }
     imshow("Final image", steps);
-    c = waitKey(500);
+    c = waitKey(50);
     if (c == 113)
       break;
     else if(c == 112)
       waitKey(0);
   } while (q != startpoint);
   return vertices;
+}
+
+void drawCover(Mat& img, vector<Point2i> vertices){
+  int i;
+  for (i = 0; i < vertices.size() -1; ++i)
+  {
+    line(img, vertices[i], vertices[i+1], CV_RGB(50, 50, 200), 2, CV_AA, 0);
+  }
+  line(img, vertices[i], vertices[0], CV_RGB(50, 50, 200), 2, CV_AA, 0);
 }
