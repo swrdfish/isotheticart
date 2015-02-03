@@ -1,14 +1,17 @@
 #include <stdio.h>
 #include <math.h>
 #include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
 // #include "makeoip.hpp"
-
+// void fillPoly(Mat& img, const Point** pts, const int* npts, int ncontours, const Scalar& color, int lineType=8, int shift=0, Point offset=Point() );
 using namespace cv;
 using namespace std;
 
-int size = 10, threshval = 200;
-Mat image, result, final, steps;
+int size = 5, threshval = 200;
+Mat image,result, final, steps;
 
+void copyMat(Mat&);
 void DrawGrid(Mat& image, int size);
 void onSizeChange(int, void*);
 int getPointType(Mat& img, Point2i q, int gsize);
@@ -17,9 +20,10 @@ Point2i getTopLeftPoint(Mat& image);
 Point2i getStartPoint(Mat& img, Point2i p, int gsize);
 vector<Point2i> makeOIP(Mat& img, Point2i topleftpoint, int gsize);
 Point2i getNextPoint(Point2i currentpoint, int d, int gsize);
-
+void DrawOIP(vector<Point2i>);
 int main(int argc, char** argv) {
-
+  Mat res;
+  char c;
   if (argc < 2) {
     cout << "Usage: cvsetup <path to image>" << endl;
     return 0;
@@ -31,28 +35,35 @@ int main(int argc, char** argv) {
     printf("No image data \n");
     return -1;
   }
-
+  
   // Convert to greyscale
-  cvtColor(image, result, CV_RGB2GRAY);
-
+  cvtColor(image, res, CV_RGB2GRAY);
+  result.create(image.rows+4*size,image.cols+4*size,res.depth());
   // Binarise the image
-  threshold(result, result, threshval, 255, CV_THRESH_BINARY);
-
+  threshold(res, res, threshval, 255, CV_THRESH_BINARY);
+  threshold(result, result, threshval, 255, 1);
   // Draw the grid
+  copyMat(res);
   final = image.clone();
   DrawGrid(final, 10);
-
+  
+  // Mat res (result, Rect(10,10, 500,500) ); 
   // Display the binary image
   namedWindow("Intermediate image", CV_WINDOW_AUTOSIZE);
   namedWindow("Final image", CV_WINDOW_AUTOSIZE);
   imshow("Intermediate image", result);
   imshow("Final image", final);
-
+  // namedWindow("Final im", CV_WINDOW_AUTOSIZE);
+  // imshow("Final im", res);
   // Create a trakbar to control the grid size
-  createTrackbar("Grid size", "Final image", &size, 50, onSizeChange);
-  createTrackbar("Threshold", "Final image", &threshval, 255, onSizeChange);
+  // createTrackbar("Grid size", "Final image", &size, 50, onSizeChange);
+  // createTrackbar("Threshold", "Final image", &threshval, 255, onSizeChange);
 
   waitKey(1000);
+  
+  uchar *pm = result.ptr(550);
+  cout<<(int)pm[550]<<endl;
+  // cout<<image<<endl;
   // cout << p << endl;
   // p = getStartPoint(result, p, size);
   // cout << p << endl;
@@ -60,12 +71,26 @@ int main(int argc, char** argv) {
   // cout << getPointType(result, p, size) << endl;
   Point2i p = getTopLeftPoint(result);
   vector<Point2i> isotheticcover = makeOIP(result, p, size);
-
-  cout << isotheticcover << endl;
+  // namedWindow("OIC", CV_WINDOW_AUTOSIZE);
+  // cout<<isotheticcover[0]<<endl;;
+  // cout << isotheticcover << endl;
+  // cout<<isotheticcover.size();
+  DrawOIP(isotheticcover);
   waitKey(1000);
+  // cin>>c;
   return 0;
 }
-
+void copyMat(Mat& src){
+  int i,j;
+  uchar *p,*q;
+  for(i=2*size;i<src.rows;i++){
+    p=src.ptr(i);
+    q=result.ptr(i);
+    for(j=2*size;j<src.cols;j++){
+      q[j]=p[j];
+    }
+  }
+}
 Point2i getTopLeftPoint(Mat& image) {
   int nRows = image.rows;
   int nCols = image.cols;
@@ -243,7 +268,7 @@ vector<Point2i> makeOIP(Mat& img, Point2i topleftpoint, int gsize) {
 
   do {
     cout << q << " type: " << type << " direction: " << d <<endl;
-    if (type == 1 || type == -1) {
+    if (type == 1||type==-1 ) {
       vertices.push_back(q);
       circle(steps, q, 3, CV_RGB(255, 0, 0), 1, CV_AA, 0);
     }
@@ -258,11 +283,41 @@ vector<Point2i> makeOIP(Mat& img, Point2i topleftpoint, int gsize) {
       d += 4;
     }
     imshow("Final image", steps);
-    c = waitKey(500);
+    c = waitKey(10);
     if (c == 113)
       break;
     else if(c == 112)
       waitKey(0);
   } while (q != startpoint);
   return vertices;
+}
+void DrawOIP(vector<Point2i> pt){
+  bool arr[1000][1000];
+  Mat OIP;
+  int i;
+  OIP.create(result.rows,result.cols,result.depth());
+  threshold(OIP,OIP, threshval, 255, 1);
+  // uchar *p;
+  // cout<<pt.size();
+  for(i=0;i<pt.size()-1;i++){
+    line(OIP, pt[i],pt[i+1], CV_RGB(0,0,0), 1, CV_AA, 0);
+  }
+  line(OIP, pt[pt.size()-1],pt[0], CV_RGB(0,0,0), 1, CV_AA, 0);
+  
+  int npt[] = {pt.size()};
+	// Point rook_points[1][20];
+	// rook_points[0]=pt;
+  Point *p;
+  p = pt.get_allocator().allocate(pt.size());
+
+  // construct values in-place on the array:
+  for (i=0; i<pt.size(); i++) pt.get_allocator().construct(&p[i],pt[i]);
+  // cout<<p[1]<<endl;
+  // pt.
+  const Point* ppt[1] = { p };
+  fillPoly( OIP,ppt,npt,1,Scalar( 0, 0, 0 ),1);
+  namedWindow("OIP", CV_WINDOW_AUTOSIZE);
+  imshow("OIP", OIP);
+  // getcha
+  waitKey(10000);
 }
