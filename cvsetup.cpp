@@ -9,7 +9,7 @@
 using namespace cv;
 using namespace std;
 
-int size = 5, threshval = 200;
+int size, threshval = 200;
 Mat image, result, final, steps;
 
 void copyMat(Mat&);
@@ -23,6 +23,7 @@ Point2i getStartPoint(Mat& img, Point2i p, int gsize);
 vector<Point2i> makeOIP(Mat& img, Point2i topleftpoint, int gsize);
 Point2i getNextPoint(Point2i currentpoint, int d, int gsize);
 void DrawOIP(vector<Point2i>);
+
 int main(int argc, char** argv) {
   Mat res;
   char c;
@@ -30,7 +31,8 @@ int main(int argc, char** argv) {
     cout << "Usage: cvsetup <path to image>" << endl;
     return 0;
   }
-
+  cout<<"size : ";
+  cin>>size;
   image = imread(argv[1]);
 
   if (!image.data) {
@@ -47,7 +49,7 @@ int main(int argc, char** argv) {
   // Draw the grid
   copyMat(res);
   final = image.clone();
-  DrawGrid(final, 10);
+  DrawGrid(final, size);
   
   // Mat res (result, Rect(10,10, 500,500) ); 
   // Display the binary image
@@ -79,13 +81,19 @@ int main(int argc, char** argv) {
   // cout << isotheticcover << endl;
   // cout<<isotheticcover.size();
   DrawOIP(isotheticcover);
-  waitKey(1000);
+  waitKey(10000);
   // cin>>c;
   return 0;
 }
 void copyMat(Mat& src){
   int i,j;
   uchar *p,*q;
+  for(i=0;i<src.rows;i++){
+    p=result.ptr(i);
+    for(j=0;j<src.cols;j++){
+      p[j]=255;
+    }
+  }
   for(i=2*size;i<src.rows;i++){
     p=src.ptr(i);
     q=result.ptr(i);
@@ -168,8 +176,8 @@ void onSizeChange(int, void*) {
 
 Point2i getStartPoint(Mat& img, Point2i p, int gsize) {
   int qx, qy;
-  qx = (ceil(float(p.x) / gsize) - 1) * gsize;
-  qy = (floor(float(p.y) / gsize)) * gsize;
+  qx = (ceil(float(p.x)/ gsize)-1) * gsize;
+  qy = (ceil(float(p.y)/ gsize)-1) * gsize;
   Point2i q(qx, qy);
   return q;
 }
