@@ -94,11 +94,11 @@ void copyMat(Mat& src){
       p[j]=255;
     }
   }
-  for(i=2*size;i<src.rows;i++){
+  for(i=0;i<src.rows;i++){
     p=src.ptr(i);
-    q=result.ptr(i);
-    for(j=2*size;j<src.cols;j++){
-      q[j]=p[j];
+    q=result.ptr(i+2*size);
+    for(j=0;j<src.cols;j++){
+      q[j+2*size]=p[j];
     }
   }
 }
@@ -268,13 +268,13 @@ vector<Point2i> makeOIP(Mat& img, Point2i topleftpoint, int gsize) {
   char c;
   vector<Point2i> vertices;
   Point2i startpoint = getStartPoint(img, topleftpoint, gsize);
-  Point2i q = startpoint;
+  Point2i q = startpoint,sum;
   int type = getPointType(img, q, gsize);
   int d = (2 + type) % 4;
-
+  sum.x=sum.y=2*size;
   // show the steps
   steps = final.clone();
-  circle(steps, q, 1, CV_RGB(0, 255, 100), 1, CV_AA, 0);
+  circle(steps, q-sum, 1, CV_RGB(0, 255, 100), 1, CV_AA, 0);
   imshow("Final image", steps);
   waitKey(500);
 
@@ -282,11 +282,11 @@ vector<Point2i> makeOIP(Mat& img, Point2i topleftpoint, int gsize) {
     cout << q << " type: " << type << " direction: " << d <<endl;
     if (type == 1||type==-1 ) {
       vertices.push_back(q);
-      circle(steps, q, 3, CV_RGB(255, 0, 0), 1, CV_AA, 0);
+      circle(steps, q-sum, 3, CV_RGB(255, 0, 0), 1, CV_AA, 0);
     }
     q = getNextPoint(q, d, gsize);
     type = getPointType(img, q, gsize);
-    circle(steps, q, 1, CV_RGB(0, 0, 200), 1, CV_AA, 0);
+    circle(steps, q-sum, 1, CV_RGB(0, 0, 200), 1, CV_AA, 0);
     if (type == -2) {
       type = -1;
     }
