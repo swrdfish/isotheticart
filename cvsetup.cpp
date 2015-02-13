@@ -1,9 +1,11 @@
 #include <iostream>
 #include <stdio.h>
 #include <math.h>
+#include <cstdlib>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+// #include <time.h>
 // #include "makeoip.hpp"
 // void fillPoly(Mat& img, const Point** pts, const int* npts, int ncontours, const Scalar& color, int lineType=8, int shift=0, Point offset=Point() );
 using namespace cv;
@@ -13,6 +15,7 @@ int size, threshval = 200;
 Mat image, result, final, steps;
 
 void copyMat(Mat&);
+void fillRpoly(Mat& img,int gsize);
 void DrawGrid(Mat& image, int size);
 void onSizeChange(int, void*);
 int getPointType(Mat& img, Point2i q, int gsize);
@@ -39,12 +42,15 @@ int main(int argc, char** argv) {
     printf("No image data \n");
     return -1;
   }
-  
+  int opt;
   // Convert to greyscale
   cvtColor(image, res, CV_RGB2GRAY);
   result.create(image.rows+4*size,image.cols+4*size,res.depth());
   // Binarise the image
-  threshold(res, res, threshval, 255, CV_THRESH_BINARY);
+  cout<<"For inverted press 1 for normal 2 : ";
+  cin>>opt;
+  if(opt==1) threshold(res, res, threshval, 255, CV_THRESH_BINARY_INV);
+  else threshold(res, res, threshval, 255, CV_THRESH_BINARY);
   threshold(result, result, threshval, 255, 1);
   // Draw the grid
   copyMat(res);
@@ -167,7 +173,7 @@ void onSizeChange(int, void*) {
 
   final = image.clone();
   cvtColor(image, result, CV_RGB2GRAY);
-  threshold(result, result, threshval, 255, CV_THRESH_BINARY);
+  threshold(result, result, threshval, 255, CV_THRESH_BINARY_INV);
 
   DrawGrid(final, size);
   imshow("Intermediate image", result);
@@ -324,6 +330,8 @@ void DrawOIP(vector<Point2i> pt){
   for(i=0;i<pt.size()-1;i++){
     line(OIP, pt[i],pt[i+1], CV_RGB(0,0,0), 1, CV_AA, 0);
   }
+  //cvtColor(OIP,OIP, CV_GRAY2BGR);
+
   line(OIP, pt[pt.size()-1],pt[0], CV_RGB(0,0,0), 1, CV_AA, 0);
   
   int npt[] = {pt.size()};
@@ -337,9 +345,49 @@ void DrawOIP(vector<Point2i> pt){
   // cout<<p[1]<<endl;
   // pt.
   const Point* ppt[1] = { p };
-  fillPoly( OIP,ppt,npt,1,Scalar( 0, 0, 0 ),1);
+  fillPoly( OIP,ppt,npt,1,Scalar( 0, 0, 0),1);
   namedWindow("OIP", CV_WINDOW_AUTOSIZE);
   imshow("OIP", OIP);
+  Mat Rpoly;
+  Rpoly=OIP.clone();
+  fillRpoly(Rpoly,size);
+    namedWindow("Rpoly", CV_WINDOW_AUTOSIZE);
+  imshow("Rpoly", Rpoly);
   // getcha
   waitKey(10000);
+}
+void fillRpoly(Mat& img,int gsize){
+  int i,j,t1,t2,t3;
+  int nRows=img.rows;
+  int nCols=img.cols;
+  Mat pattern(nRows,nCols, CV_8UC3, Scalar(255,255,255));
+  Point tmp[5];
+  int npt[1]={4};
+  const Point* pt[1];
+  uchar *p;
+  // srand();
+  for(j=0;j<nRows;j+=gsize){
+    p=img.ptr(j);
+    for(i=0;i<nCols;i+=gsize){
+      if(p[i]==0){
+        tmp[0].x=i;
+        tmp[0].y=j;
+        tmp[1].x=(i+gsize-1);
+        tmp[1].y=j;
+        tmp[2].x=(i+gsize-1);
+        tmp[2].y=(j+gsize-1);
+        tmp[3].x=i;
+        tmp[3].y=(j+gsize-1);
+        tmp[4].x=i;
+        tmp[4].y=j;
+        pt[0]=tmp;
+        t1=rand()%256;
+        t2=rand()%256;
+        t3=rand()%256;
+        cout<<t1<<" "<<t2<<" "<<t3<<endl;
+        fillPoly( pattern,pt,npt,1, Scalar( t1, t2,t3 ), 1);
+      }
+    }
+  }
+  imshow("pattern", pattern); 
 }
