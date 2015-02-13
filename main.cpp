@@ -33,19 +33,19 @@ int main(int argc, char** argv) {
   cout << "size : ";
   cin >> size;
   final = image.clone();
-
+  drawGrid(final, size);
   // Display the binary image
   imshow("Threshold", result);
 
-  // make isothetic cover
+  // Make isothetic cover
   vector<Point2i> isotheticcover = makeOIP(result, size);
   drawOIC(result, isotheticcover, true);
   imshow("Isothetic Cover", result);
   
-  // fill the isothetic cover with random colors
+  // Fill the isothetic cover with random colors
   int nRows = result.rows;
   int nCols = result.cols;
-  
+
   Mat pattern(nRows,nCols, CV_8UC3, Scalar(255,255,255));
   patternRandRGB(result, pattern, size);
   imshow("Result", pattern);

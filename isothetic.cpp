@@ -92,6 +92,11 @@ bool objectInUGB(Mat& img, Point2i q, int ugb, int gsize) {
     default:
       break;
   }
+  // handle boundary conditions
+  if(pt.x < 0 || pt.y < 0 || pt.x >= img.cols || pt.y >= img.rows){
+    return false;
+  }
+
   uchar* p;
   for (int i = pt.y; i <= pt.y + gsize; i++) {
     p = img.ptr(i);
@@ -151,11 +156,11 @@ vector<Point2i> makeOIP(Mat& img, int gsize) {
   Mat steps;
   Point2i topleftpoint = getTopLeftPoint(img);
   Point2i startpoint = getStartPoint(img, topleftpoint, gsize);
-  Point2i q = startpoint,sum;
+  Point2i q = startpoint;
   int type = getPointType(img, q, gsize);
   int d = (2 + type) % 4;
   do {
-    cout << q << " type: " << type << " direction: " << d <<endl;
+    // cout << q << " type: " << type << " direction: " << d <<endl;
     if (type == 1||type==-1 ) {
       vertices.push_back(q);
     }
@@ -197,12 +202,13 @@ vector<Point2i> animateOIP(Mat& img, Mat& final, int gsize) {
   Mat steps;
   Point2i topleftpoint = getTopLeftPoint(img);
   Point2i startpoint = getStartPoint(img, topleftpoint, gsize);
-  Point2i q = startpoint,sum;
+  Point2i q = startpoint;
   int type = getPointType(img, q, gsize);
+  // cout << "topleft: " << topleftpoint << " startpoint: " << startpoint << " type: " << type << endl;
   int d = (2 + type) % 4;
   // show the steps
   steps = final.clone();
-  circle(steps, q-sum, 1, CV_RGB(0, 255, 100), 1, CV_AA, 0);
+  circle(steps, q, 1, CV_RGB(0, 255, 100), 1, CV_AA, 0);
   imshow("Final image", steps);
   waitKey(500);
 
@@ -210,11 +216,11 @@ vector<Point2i> animateOIP(Mat& img, Mat& final, int gsize) {
     // cout << q << " type: " << type << " direction: " << d <<endl;
     if (type == 1||type==-1 ) {
       vertices.push_back(q);
-      circle(steps, q-sum, 3, CV_RGB(255, 0, 0), 1, CV_AA, 0);
+      circle(steps, q, 3, CV_RGB(255, 0, 0), 1, CV_AA, 0);
     }
     q = getNextPoint(q, d, gsize);
     type = getPointType(img, q, gsize);
-    circle(steps, q-sum, 1, CV_RGB(0, 0, 200), 1, CV_AA, 0);
+    circle(steps, q, 1, CV_RGB(0, 0, 200), 1, CV_AA, 0);
     if (type == -2) {
       type = -1;
     }
