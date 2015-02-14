@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
   int nCols = result.cols;
 
   Mat pattern(nRows,nCols, CV_8UC3, Scalar(255,255,255));
-  patternRandRGB(result, pattern, size);
+  patternRandRGB(result, pattern, size, true);
   imshow("Result", pattern);
 
   waitKey(0);

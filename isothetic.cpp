@@ -238,7 +238,7 @@ vector<Point2i> animateOIP(Mat& img, Mat& final, int gsize) {
   return vertices;
 }
 
-void patternRandRGB(Mat& src, Mat& dest, int gsize){
+void patternRandRGB(Mat& src, Mat& dest, int gsize, bool animate){
   int i,j,blue,green,red;
   int nRows=src.rows;
   int nCols=src.cols;
@@ -246,11 +246,12 @@ void patternRandRGB(Mat& src, Mat& dest, int gsize){
   int npts[1]={4};
   const Point2i* pts[1];
 
+  char c;
   uchar *p;
   for(j=0;j<nRows;j+=gsize){
-    p=src.ptr(j);
+    p=src.ptr(j+1);
     for(i=0;i<nCols;i+=gsize){
-      if(p[i]==0){
+      if(p[i+1]==0){
         tmp[0].x=i;
         tmp[0].y=j;
         tmp[1].x=(i+gsize-1);
@@ -266,6 +267,13 @@ void patternRandRGB(Mat& src, Mat& dest, int gsize){
         green=rand()%256;
         red=rand()%256;
         fillPoly( dest, pts, npts, 1, Scalar(blue, green, red), 1, 0);
+        if(animate){
+          imshow("intermediate", dest);
+          c = waitKey(10);
+          if(c == 113){
+            animate = false;
+          }
+        }
       }
     }
   }
