@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include "isothetic.hpp"
 
 int main(int argc, char** argv) {
