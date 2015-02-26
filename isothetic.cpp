@@ -182,6 +182,22 @@ vector<Point2i> makeOIP(Mat& img, int gsize) {
 void drawOIC(Mat& img, vector<Point2i> vertices, bool isfilled){
   const Point * pts[1] = { &vertices.at(0)};
   int npts[1] = { int(vertices.size())};
+  
+  
+  /*Mat img1;
+  img1.create(img.cols,img.rows,img.depth());
+  Point p[4];
+  p[0].y=0;p[0].x=0;
+  p[1].y=0;p[1].x=img.rows-1;
+  p[2].y=img.cols-1;p[2].x=img.rows-1;
+  p[3].y=img.cols-1;p[3].x=0;
+  Point * pts1[1];
+  pts1[0]=new Point[4];
+  pts1[0][0]=p[0];pts1[0][1]=p[1];pts1[0][2]=p[2];pts1[0][3]=p[3];
+  int npts1[1]={4};
+  fillPoly(img1,(const Point**)pts1,npts1,1,Scalar(255,255,255));*/
+  
+
   if (isfilled)
   {
     fillPoly(img, pts, npts, 1, Scalar( 0, 0, 0), 1, 0);
@@ -190,10 +206,11 @@ void drawOIC(Mat& img, vector<Point2i> vertices, bool isfilled){
     int iii;
     for (iii = 0; iii < vertices.size() -1; ++iii)
     {
-      line(img, vertices[iii], vertices[iii+1], CV_RGB(50, 50, 200), 2, CV_AA, 0);
+      line(img, vertices[iii], vertices[iii+1], CV_RGB(0, 0, 0), 2, CV_AA, 0);
     }
-    line(img, vertices[iii], vertices[0], CV_RGB(50, 50, 200), 2, CV_AA, 0);
+    line(img, vertices[iii], vertices[0], CV_RGB(0,0,0), 2, CV_AA, 0);
   }
+  // img=img1.clone();
 }
 
 vector<Point2i> animateOIP(Mat& img, Mat& final, int gsize) {
@@ -246,7 +263,7 @@ void patternRandRGB(Mat& src, Mat& dest, int gsize, bool animate){
   int npts[1]={4};
   const Point2i* pts[1];
 
-  char c;
+  char c=113;
   uchar *p;
   for(j=0;j<nRows;j+=gsize){
     p=src.ptr(j+1);
@@ -263,16 +280,112 @@ void patternRandRGB(Mat& src, Mat& dest, int gsize, bool animate){
         tmp[4].x=i;
         tmp[4].y=j;
         pts[0]=tmp;
-        blue=rand()%256;
-        green=rand()%256;
-        red=rand()%256;
+        blue=rand()%255;
+        green=rand()%255;
+        red=rand()%255;
         fillPoly( dest, pts, npts, 1, Scalar(blue, green, red), 1, 0);
         if(animate){
           imshow("intermediate", dest);
-          c = waitKey(10);
+          // c = waitKey(10);
           if(c == 113){
             animate = false;
           }
+        }
+      }
+    }
+  }
+}
+void effect1(Mat &src,Mat &dest,int gsize){
+  int i,j,channels,k,gc,nRows,nCols,cnt;
+  uchar *p,*q;
+  dest=src.clone();
+  nRows=dest.rows;
+  nCols=dest.cols*dest.channels();
+  channels=dest.channels();
+  gc=gsize*channels;
+  int start=(float(gsize)*(4.0/5.0)*channels);
+  for(i=0;i<nRows;i++){
+    p=dest.ptr(i);
+    for(j=0;j<nCols;j+=gc){
+      if((p[j]<255)&&(p[j+gc]<255)){
+        cnt=0;
+        for(k=j+start;k<(j+gc);k++){
+          cnt++;
+          p[k]=(((2*(gc-start)-cnt)/float(2*(gc-start)))*p[k])+(float(cnt)/float(2*(gc-start))*p[k+gc]);
+        }
+        for(k=j+gc;k<(j+2*gc-start);k++){
+          cnt++;
+          p[k]=(((2*(gc-start)-cnt)/float(2*(gc-start)))*p[k-gc])+(float(cnt)/float(2*(gc-start))*p[k]);
+        }
+      }
+    }
+  }
+  gc=gsize;
+  start=(float(gsize)*(4.0/5.0));
+  for(i=0;i<nRows;i+=gc){
+    p=dest.ptr(i);
+    for(j=0;j<nCols;j++){
+      if((p[j]<255)&&(p[j+gc]<255)){
+        cnt=0;
+        for(k=i+start;k<(i+gc);k++){
+          p=dest.ptr(k);
+          q=dest.ptr(k+gc);
+          cnt++;
+          p[j]=((2*(gc-start)-cnt)/float(2*(gc-start)))*p[j]+float(cnt)/float(2*(gc-start))*q[j];
+        }
+        for(k=i+gc;k<(i+2*gc-start);k++){
+          p=dest.ptr(k-gc);
+          q=dest.ptr(k);
+          cnt++;
+          q[j]=((2*(gc-start)-cnt)/float(2*(gc-start)))*p[j]+float(cnt)/float(2*(gc-start))*q[j];
+        }
+      }
+    }
+  }
+}
+void effect2(Mat &src,Mat &dest,int gsize){
+  int i,j,channels,k,gc,nRows,nCols,cnt;
+  uchar *p,*q;
+  dest=src.clone();
+  nRows=dest.rows;
+  nCols=dest.cols*dest.channels();
+  channels=dest.channels();
+  gc=gsize*channels;
+  int start=(float(gsize)*(0/5.0)*channels);
+  for(i=0;i<nRows;i++){
+    p=dest.ptr(i);
+    for(j=0;j<nCols;j+=gc){
+      if((p[j]<255)&&(p[j+gc]<255)){
+        cnt=0;
+        for(k=j+start;k<(j+gc);k++){
+          cnt++;
+          p[k]=(((2*(gc-start)-cnt)/float(2*(gc-start)))*p[k])+(float(cnt)/float(2*(gc-start))*p[k+gc]);
+        }
+        for(k=j+gc;k<(j+2*gc-start);k++){
+          cnt++;
+          p[k]=(((2*(gc-start)-cnt)/float(2*(gc-start)))*p[k-gc])+(float(cnt)/float(2*(gc-start))*p[k]);
+        }
+      }
+    }
+  }
+  gc=gsize;
+  start=(float(gsize)*(0/5.0));
+  for(i=0;i<nRows;i+=gc){
+    p=dest.ptr(i);
+    for(j=0;j<nCols;j++){
+      if((p[j]<255)&&(p[j+gc]<255)){
+        cnt=0;
+        for(k=i+start;k<(i+gc);k++){
+          p=dest.ptr(k);
+          q=dest.ptr(k+gc);
+          cnt++;
+          p[j]=((2*(gc-start)-cnt)/float(2*(gc-start)))*p[j]+float(cnt)/float(2*(gc-start))*q[j];
+        }
+        for(k=i+gc;k<(i+2*gc-start);k++){
+          p=dest.ptr(k-gc);
+          q=dest.ptr(k);
+          cnt++;
+          q[j]=((2*(gc-start)-cnt)/float(2*(gc-start)))*p[j]+float(cnt)/float(2*(gc-start))*q[j];
         }
       }
     }
