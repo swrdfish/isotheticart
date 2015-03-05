@@ -337,34 +337,14 @@ void smoothFill(Mat src, Mat dest, Mat thresMask, int gsize) {
 
 // (distance += .5) % 360, 1, .5)
 
-    dest.ptr(p.y)[p.x * 3 + 0] = int(distance += 0.005) % 255;
-    dest.ptr(p.y)[p.x * 3 + 1] = 180;
-    dest.ptr(p.y)[p.x * 3 + 2] = 180;
+    if(thresMask.ptr(p.y)[p.x] == 0){
+      dest.ptr(p.y)[p.x * 3 + 0] = int(distance += 0.005) % 255;
+      dest.ptr(p.y)[p.x * 3 + 1] = 180;
+      dest.ptr(p.y)[p.x * 3 + 2] = 180;  
+    }
     // imshow("animate", dest);
     // waitKey(1);
   }
 
   cvtColor(dest, dest, CV_HSV2BGR, 0);
-
-  //     for(int j = 1; j < nRows - 1; ++j)
-  //     {
-  //         uchar* p = dest.ptr(j);
-  //         for(int i = 0; i < nChannels * nCols; i+=3)
-  //         {
-  //           p[i] = saturate_cast<uchar>(0);
-  //           p[i+1] = saturate_cast<uchar>(255);
-  //           p[i+2] = saturate_cast<uchar>(0);
-  //         }
-  //     }
-
-  //     procedure BFS(G,v) is
-  // 2      let Q be a queue
-  // 3      Q.push(v)
-  // 4      label v as discovered
-  // 5      while Q is not empty
-  // 6         v ← Q.pop()
-  // 7         for all edges from v to w in G.adjacentEdges(v) do
-  // 8             if w is not labeled as discovered
-  // 9                 Q.push(w)
-  // 10                label w as discovered
 }
