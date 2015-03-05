@@ -274,14 +274,14 @@ void patternRandRGB(Mat& src, Mat& dest, int gsize, bool animate) {
   }
 }
 
-Point2i randomPop(vector<Point2i> * v) {
-  if (!v.size()) return;
-  int n = v.size(),
+Point2i randomPop(vector<Point2i>* v) {
+  if (!(*v).size()) return Point2i(-1, -1);
+  int n = (*v).size();
   int i = rand() * n | 0;
-  Point2i t = v[i];
-  v[i] = v[n - 1];
-  v[n - 1] = t;
-  v.pop_back();
+  Point2i t = (*v)[i];
+  (*v)[i] = (*v)[n - 1];
+  (*v)[n - 1] = t;
+  (*v).pop_back();
   return t;
 }
 
@@ -289,18 +289,25 @@ void smoothFill(Mat src, Mat dest, Mat thresMask, int gsize) {
   int nRows = dest.rows;
   int nCols = dest.cols;
   int nChannels = dest.channels();
-
+  int n = 0;
+  float distance = 0;
   // matrix to keep track of the visited nodes
   int visited[nRows * nCols];
 
+  // convert to hsv space
+  cvtColor(dest, dest, CV_BGR2HSV, 0);
   // queue to hold the nodes
   vector<Point2i> frontier;
   Point2i p(0, 0), q;
   frontier.push_back(p);
   visited[p.y * nRows + p.x] = 1;
 
-  while (frontier.size()) {
-    p = randomPop(&frontier);
+  while (n = frontier.size()) {
+    int i = rand() % n;
+    Point2i p = frontier[i];
+    frontier[i] = frontier[n - 1];
+    frontier[n - 1] = p;
+    frontier.pop_back();
 
     // adjacent nodes
     q.x = p.x + 1;
@@ -328,12 +335,16 @@ void smoothFill(Mat src, Mat dest, Mat thresMask, int gsize) {
       visited[q.y * nRows + q.x] = 1;
     }
 
-    dest.ptr(p.y)[p.x * 3 + 0] = frontier.size() % 255;
-    dest.ptr(p.y)[p.x * 3 + 1] = frontier.size() % 255;
-    dest.ptr(p.y)[p.x * 3 + 2] = frontier.size() % 255;
+// (distance += .5) % 360, 1, .5)
+
+    dest.ptr(p.y)[p.x * 3 + 0] = int(distance += 0.005) % 255;
+    dest.ptr(p.y)[p.x * 3 + 1] = 180;
+    dest.ptr(p.y)[p.x * 3 + 2] = 180;
     // imshow("animate", dest);
     // waitKey(1);
   }
+
+  cvtColor(dest, dest, CV_HSV2BGR, 0);
 
   //     for(int j = 1; j < nRows - 1; ++j)
   //     {
