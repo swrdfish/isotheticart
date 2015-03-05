@@ -1,8 +1,7 @@
 #include "isothetic.hpp"
 
 void drawGrid(Mat& img, int gsize) {
-  if (gsize < 2)
-    return;
+  if (gsize < 2) return;
   int nRows = img.rows;
   int nCols = img.cols;
 
@@ -48,8 +47,7 @@ Point2i getTopLeftPoint(Mat& image) {
           nCols = image.cols;
           Point2i P(j % nCols, j / nCols);
           return P;
-        } 
-        else {
+        } else {
           Point2i P(j, i);
           return P;
         }
@@ -61,11 +59,10 @@ Point2i getTopLeftPoint(Mat& image) {
   return P;
 }
 
-
 Point2i getStartPoint(Mat& img, Point2i p, int gsize) {
   int qx, qy;
-  qx = (ceil(float(p.x)/ gsize)-1) * gsize;
-  qy = (ceil(float(p.y)/ gsize)-1) * gsize;
+  qx = (ceil(float(p.x) / gsize) - 1) * gsize;
+  qy = (ceil(float(p.y) / gsize) - 1) * gsize;
   Point2i q(qx, qy);
   return q;
 }
@@ -93,7 +90,7 @@ bool objectInUGB(Mat& img, Point2i q, int ugb, int gsize) {
       break;
   }
   // handle boundary conditions
-  if(pt.x < 0 || pt.y < 0 || pt.x >= img.cols || pt.y >= img.rows){
+  if (pt.x < 0 || pt.y < 0 || pt.x >= img.cols || pt.y >= img.rows) {
     return false;
   }
 
@@ -161,7 +158,7 @@ vector<Point2i> makeOIP(Mat& img, int gsize) {
   int d = (2 + type) % 4;
   do {
     // cout << q << " type: " << type << " direction: " << d <<endl;
-    if (type == 1||type==-1 ) {
+    if (type == 1 || type == -1) {
       vertices.push_back(q);
     }
     q = getNextPoint(q, d, gsize);
@@ -170,27 +167,24 @@ vector<Point2i> makeOIP(Mat& img, int gsize) {
       type = -1;
     }
     d = (d + type) % 4;
-    if (d < 0){
+    if (d < 0) {
       d += 4;
     }
   } while (q != startpoint);
- 
+
   return vertices;
 }
 
-
-void drawOIC(Mat& img, vector<Point2i> vertices, bool isfilled){
-  const Point * pts[1] = { &vertices.at(0)};
-  int npts[1] = { int(vertices.size())};
-  if (isfilled)
-  {
-    fillPoly(img, pts, npts, 1, Scalar( 0, 0, 0), 1, 0);
-  }
-  else {
+void drawOIC(Mat& img, vector<Point2i> vertices, bool isfilled) {
+  const Point* pts[1] = {&vertices.at(0)};
+  int npts[1] = {int(vertices.size())};
+  if (isfilled) {
+    fillPoly(img, pts, npts, 1, Scalar(0, 0, 0), 1, 0);
+  } else {
     int iii;
-    for (iii = 0; iii < vertices.size() -1; ++iii)
-    {
-      line(img, vertices[iii], vertices[iii+1], CV_RGB(50, 50, 200), 2, CV_AA, 0);
+    for (iii = 0; iii < vertices.size() - 1; ++iii) {
+      line(img, vertices[iii], vertices[iii + 1], CV_RGB(50, 50, 200), 2, CV_AA,
+           0);
     }
     line(img, vertices[iii], vertices[0], CV_RGB(50, 50, 200), 2, CV_AA, 0);
   }
@@ -204,7 +198,8 @@ vector<Point2i> animateOIP(Mat& img, Mat& final, int gsize) {
   Point2i startpoint = getStartPoint(img, topleftpoint, gsize);
   Point2i q = startpoint;
   int type = getPointType(img, q, gsize);
-  // cout << "topleft: " << topleftpoint << " startpoint: " << startpoint << " type: " << type << endl;
+  // cout << "topleft: " << topleftpoint << " startpoint: " << startpoint << "
+  // type: " << type << endl;
   int d = (2 + type) % 4;
   // show the steps
   steps = final.clone();
@@ -214,7 +209,7 @@ vector<Point2i> animateOIP(Mat& img, Mat& final, int gsize) {
 
   do {
     // cout << q << " type: " << type << " direction: " << d <<endl;
-    if (type == 1||type==-1 ) {
+    if (type == 1 || type == -1) {
       vertices.push_back(q);
       circle(steps, q, 3, CV_RGB(255, 0, 0), 1, CV_AA, 0);
     }
@@ -225,56 +220,140 @@ vector<Point2i> animateOIP(Mat& img, Mat& final, int gsize) {
       type = -1;
     }
     d = (d + type) % 4;
-    if (d < 0){
+    if (d < 0) {
       d += 4;
     }
     imshow("Final image", steps);
     c = waitKey(10);
     if (c == 113)
       break;
-    else if(c == 112)
-      waitKey(0);
+    else if (c == 112)
+      waitKey(500);
   } while (q != startpoint);
   return vertices;
 }
 
-void patternRandRGB(Mat& src, Mat& dest, int gsize, bool animate){
-  int i,j,blue,green,red;
-  int nRows=src.rows;
-  int nCols=src.cols;
+void patternRandRGB(Mat& src, Mat& dest, int gsize, bool animate) {
+  int i, j, blue, green, red;
+  int nRows = src.rows;
+  int nCols = src.cols;
   Point2i tmp[5];
-  int npts[1]={4};
+  int npts[1] = {4};
   const Point2i* pts[1];
 
   char c;
-  uchar *p;
-  for(j=0;j<nRows;j+=gsize){
-    p=src.ptr(j+1);
-    for(i=0;i<nCols;i+=gsize){
-      if(p[i+1]==0){
-        tmp[0].x=i;
-        tmp[0].y=j;
-        tmp[1].x=(i+gsize-1);
-        tmp[1].y=j;
-        tmp[2].x=(i+gsize-1);
-        tmp[2].y=(j+gsize-1);
-        tmp[3].x=i;
-        tmp[3].y=(j+gsize-1);
-        tmp[4].x=i;
-        tmp[4].y=j;
-        pts[0]=tmp;
-        blue=rand()%256;
-        green=rand()%256;
-        red=rand()%256;
-        fillPoly( dest, pts, npts, 1, Scalar(blue, green, red), 1, 0);
-        if(animate){
+  uchar* p;
+  for (j = 0; j < nRows; j += gsize) {
+    p = src.ptr(j + 1);
+    for (i = 0; i < nCols; i += gsize) {
+      if (p[i + 1] == 0) {
+        tmp[0].x = i;
+        tmp[0].y = j;
+        tmp[1].x = (i + gsize - 1);
+        tmp[1].y = j;
+        tmp[2].x = (i + gsize - 1);
+        tmp[2].y = (j + gsize - 1);
+        tmp[3].x = i;
+        tmp[3].y = (j + gsize - 1);
+        tmp[4].x = i;
+        tmp[4].y = j;
+        pts[0] = tmp;
+        blue = rand() % 256;
+        green = rand() % 256;
+        red = rand() % 256;
+        fillPoly(dest, pts, npts, 1, Scalar(blue, green, red), 1, 0);
+        if (animate) {
           imshow("intermediate", dest);
           c = waitKey(10);
-          if(c == 113){
+          if (c == 113) {
             animate = false;
           }
         }
       }
     }
   }
+}
+
+Point2i randomPop(vector<Point2i> * v) {
+  if (!v.size()) return;
+  int n = v.size(),
+  int i = rand() * n | 0;
+  Point2i t = v[i];
+  v[i] = v[n - 1];
+  v[n - 1] = t;
+  v.pop_back();
+  return t;
+}
+
+void smoothFill(Mat src, Mat dest, Mat thresMask, int gsize) {
+  int nRows = dest.rows;
+  int nCols = dest.cols;
+  int nChannels = dest.channels();
+
+  // matrix to keep track of the visited nodes
+  int visited[nRows * nCols];
+
+  // queue to hold the nodes
+  vector<Point2i> frontier;
+  Point2i p(0, 0), q;
+  frontier.push_back(p);
+  visited[p.y * nRows + p.x] = 1;
+
+  while (frontier.size()) {
+    p = randomPop(&frontier);
+
+    // adjacent nodes
+    q.x = p.x + 1;
+    q.y = p.y;
+    if (q.x < nCols && visited[q.y * nRows + q.x] != 1) {
+      frontier.push_back(q);
+      visited[q.y * nRows + q.x] = 1;
+    }
+    q.x = p.x;
+    q.y = p.y + 1;
+    if (q.y < nRows && visited[q.y * nRows + q.x] != 1) {
+      frontier.push_back(q);
+      visited[q.y * nRows + q.x] = 1;
+    }
+    q.x = p.x - 1;
+    q.y = p.y;
+    if (q.x >= 0 && visited[q.y * nRows + q.x] != 1) {
+      frontier.push_back(q);
+      visited[q.y * nRows + q.x] = 1;
+    }
+    q.x = p.x;
+    q.y = p.y - 1;
+    if (q.y >= 0 && visited[q.y * nRows + q.x] != 1) {
+      frontier.push_back(q);
+      visited[q.y * nRows + q.x] = 1;
+    }
+
+    dest.ptr(p.y)[p.x * 3 + 0] = frontier.size() % 255;
+    dest.ptr(p.y)[p.x * 3 + 1] = frontier.size() % 255;
+    dest.ptr(p.y)[p.x * 3 + 2] = frontier.size() % 255;
+    // imshow("animate", dest);
+    // waitKey(1);
+  }
+
+  //     for(int j = 1; j < nRows - 1; ++j)
+  //     {
+  //         uchar* p = dest.ptr(j);
+  //         for(int i = 0; i < nChannels * nCols; i+=3)
+  //         {
+  //           p[i] = saturate_cast<uchar>(0);
+  //           p[i+1] = saturate_cast<uchar>(255);
+  //           p[i+2] = saturate_cast<uchar>(0);
+  //         }
+  //     }
+
+  //     procedure BFS(G,v) is
+  // 2      let Q be a queue
+  // 3      Q.push(v)
+  // 4      label v as discovered
+  // 5      while Q is not empty
+  // 6         v ← Q.pop()
+  // 7         for all edges from v to w in G.adjacentEdges(v) do
+  // 8             if w is not labeled as discovered
+  // 9                 Q.push(w)
+  // 10                label w as discovered
 }

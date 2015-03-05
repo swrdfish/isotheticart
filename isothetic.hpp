@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <math.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -16,5 +17,6 @@ vector<Point2i> makeOIP(Mat& img, int gsize);
 vector<Point2i> animateOIP(Mat& img, Mat& final, int gsize);
 void drawOIC(Mat& img, vector<Point2i> vertices, bool filled);
 void patternRandRGB(Mat& src, Mat& dest, int gsize, bool animate);
+void smoothFill(Mat src, Mat dest, Mat thresMask, int gsize);
 
 #endif

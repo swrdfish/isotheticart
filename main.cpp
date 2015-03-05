@@ -2,7 +2,7 @@
 #include "isothetic.hpp"
 
 int main(int argc, char** argv) {
-  Mat image, result, final;
+  Mat image, result, final, test;
   int size;
   int opt;
   int threshval = 200;
@@ -19,6 +19,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
+  test = image.clone();
   // Convert to greyscale
   cvtColor(image, result, CV_RGB2GRAY);
 
@@ -39,7 +40,7 @@ int main(int argc, char** argv) {
   imshow("Threshold", result);
 
   // Make isothetic cover
-  vector<Point2i> isotheticcover = makeOIP(result, size);
+  vector<Point2i> isotheticcover = animateOIP(result, final, size);
   drawOIC(result, isotheticcover, true);
   imshow("Isothetic Cover", result);
   
@@ -51,6 +52,9 @@ int main(int argc, char** argv) {
   patternRandRGB(result, pattern, size, true);
   imshow("Result", pattern);
 
+  // test
+  smoothFill(image, test, result, 3);
+  imshow("Test", test);
   waitKey(0);
   return 0;
 }
