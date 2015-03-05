@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
   imshow("Result", pattern);
 
   // test
-  smoothFill(image, test, result, 3);
+  rainbowFill(image, test, result, size, true);
   imshow("Test", test);
   waitKey(0);
   return 0;

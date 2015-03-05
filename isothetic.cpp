@@ -274,35 +274,33 @@ void patternRandRGB(Mat& src, Mat& dest, int gsize, bool animate) {
   }
 }
 
-Point2i randomPop(vector<Point2i>* v) {
-  if (!(*v).size()) return Point2i(-1, -1);
-  int n = (*v).size();
-  int i = rand() * n | 0;
-  Point2i t = (*v)[i];
-  (*v)[i] = (*v)[n - 1];
-  (*v)[n - 1] = t;
-  (*v).pop_back();
-  return t;
-}
 
-void smoothFill(Mat src, Mat dest, Mat thresMask, int gsize) {
+void rainbowFill(Mat src, Mat dest, Mat thresMask, int gsize, bool animate) {
   int nRows = dest.rows;
   int nCols = dest.cols;
   int nChannels = dest.channels();
-  int n = 0;
-  float distance = 0;
+  int n = 0; char c;
+  float distance = 150;
+  Point2i tmp[5];
+  int npts[1] = {4};
+  const Point2i* pts[1];
+  Point2i topleftpoint = getTopLeftPoint(thresMask);
+  cvtColor(dest, dest, CV_BGR2HSV, 0);
+
   // matrix to keep track of the visited nodes
   int visited[nRows * nCols];
 
-  // convert to hsv space
-  cvtColor(dest, dest, CV_BGR2HSV, 0);
   // queue to hold the nodes
   vector<Point2i> frontier;
-  Point2i p(0, 0), q;
+  Point2i p, q;
+  p = topleftpoint;
+  cout << "debug: " << p << endl;
   frontier.push_back(p);
   visited[p.y * nRows + p.x] = 1;
 
   while (n = frontier.size()) {
+    // convert to hsv space
+    
     int i = rand() % n;
     Point2i p = frontier[i];
     frontier[i] = frontier[n - 1];
@@ -310,41 +308,56 @@ void smoothFill(Mat src, Mat dest, Mat thresMask, int gsize) {
     frontier.pop_back();
 
     // adjacent nodes
-    q.x = p.x + 1;
+    q.x = p.x + gsize;
     q.y = p.y;
-    if (q.x < nCols && visited[q.y * nRows + q.x] != 1) {
+    if (q.x < nCols && thresMask.ptr(q.y)[q.x] == 0 && visited[q.y * nRows + q.x] != 1) {
       frontier.push_back(q);
       visited[q.y * nRows + q.x] = 1;
     }
     q.x = p.x;
-    q.y = p.y + 1;
-    if (q.y < nRows && visited[q.y * nRows + q.x] != 1) {
+    q.y = p.y + gsize;
+    if (q.y < nRows && thresMask.ptr(q.y)[q.x] == 0 && visited[q.y * nRows + q.x] != 1) {
       frontier.push_back(q);
       visited[q.y * nRows + q.x] = 1;
     }
-    q.x = p.x - 1;
+    q.x = p.x - gsize;
     q.y = p.y;
-    if (q.x >= 0 && visited[q.y * nRows + q.x] != 1) {
+    if (q.x >= 0 && thresMask.ptr(q.y)[q.x] == 0 && visited[q.y * nRows + q.x] != 1) {
       frontier.push_back(q);
       visited[q.y * nRows + q.x] = 1;
     }
     q.x = p.x;
-    q.y = p.y - 1;
-    if (q.y >= 0 && visited[q.y * nRows + q.x] != 1) {
+    q.y = p.y - gsize;
+    if (q.y >= 0 && thresMask.ptr(q.y)[q.x] == 0 && visited[q.y * nRows + q.x] != 1) {
       frontier.push_back(q);
       visited[q.y * nRows + q.x] = 1;
     }
 
-// (distance += .5) % 360, 1, .5)
-
-    if(thresMask.ptr(p.y)[p.x] == 0){
-      dest.ptr(p.y)[p.x * 3 + 0] = int(distance += 0.005) % 255;
-      dest.ptr(p.y)[p.x * 3 + 1] = 180;
-      dest.ptr(p.y)[p.x * 3 + 2] = 180;  
-    }
-    // imshow("animate", dest);
-    // waitKey(1);
+    tmp[0].x = p.x;
+    tmp[0].y = p.y;
+    tmp[1].x = (p.x + gsize - 1);
+    tmp[1].y = p.y;
+    tmp[2].x = (p.x + gsize - 1);
+    tmp[2].y = (p.y + gsize - 1);
+    tmp[3].x = p.x;
+    tmp[3].y = (p.y + gsize - 1);
+    tmp[4].x = p.x;
+    tmp[4].y = p.y;
+    pts[0] = tmp;
+    fillPoly(dest, pts, npts, 1, Scalar(int(distance += gsize*0.03) % 255, 180, 180), 1, 0);
+    // if(thresMask.ptr(p.y)[p.x] == 0){
+    // }
+    // dest.ptr(p.y)[p.x * 3 + 0] = int(distance += 0.005) % 255;
+    // dest.ptr(p.y)[p.x * 3 + 1] = 180;
+    // dest.ptr(p.y)[p.x * 3 + 2] = 180;  
+    if (animate) {
+          imshow("intermediate", dest);
+          c = waitKey(10);
+          if (c == 113) {
+            animate = false;
+          }
+        }
   }
-
   cvtColor(dest, dest, CV_HSV2BGR, 0);
+
 }

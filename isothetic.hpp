@@ -17,6 +17,6 @@ vector<Point2i> makeOIP(Mat& img, int gsize);
 vector<Point2i> animateOIP(Mat& img, Mat& final, int gsize);
 void drawOIC(Mat& img, vector<Point2i> vertices, bool filled);
 void patternRandRGB(Mat& src, Mat& dest, int gsize, bool animate);
-void smoothFill(Mat src, Mat dest, Mat thresMask, int gsize);
+void rainbowFill(Mat src, Mat dest, Mat thresMask, int gsize, bool animate);
 
 #endif
