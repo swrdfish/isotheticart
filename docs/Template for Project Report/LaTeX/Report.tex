@@ -226,11 +226,38 @@ Include the details about state-of-the-art and how your problem is different and
 
 
 \section{PRELIMINARIES AND DEFINITIONS}
-Write the precursory details in this section.
+
+
+\textit{Digital Plane}: The digital plane,$\textbf{Z}^2$,is the set of all points having 
+integer coordinates in the real plane $\textbf{R}^2$ .A point in the digital plane is 
+called a digital point,or called a pixel in case of a digital image.Henceforth,the term
+"point" and "digital point" will be interchangeably used.
+\break
+
+
+\textit{Digital grid}: A grid \textbf{G} := (\textbf{H},\textbf{V}) consists of a set \textbf{H} of horizontal grid lines and a set \textbf{V} of vertical grid lines, where, \textbf{H} = \{...,${\textit{l}}_H$(\textit{j-2g}),${\textit{l}}_H$(\textit{j-g}), ${\textit{l}}_H$(\textit{j}), ${\textit{l}}_H$(\textit{j+g}), ${\textit{l}}_H$(\textit{j+2g}),...\}{$\subset $$\textbf{Z}^2$} and \textbf{V}=\{...,${\textit{l}}_V$(\textit{j-2g}),${\textit{l}}_V$(\textit{j-g}), ${\textit{l}}_V$(\textit{j}), ${\textit{l}}_V$(\textit{j+g}), ${\textit{l}}_V$(\textit{j+2g}),...\}{$\subset $$\textbf{Z}^2$}, for a grid size,\textit{g} $\in$ {$\textbf{Z}^+$}. Here, ${\textit{l}}_H$ := \{(\textit{ $\i^{'}$},\textit{j}):\textit{$\i^{'}$}$\in$ \textbf{Z} denotes the horizontal grid line and ${\textit{l}}_V$ := \{(\textit{i},\textit{ $\j^{'}$}):\textit{$\j^{'}$}$\in$ \textbf{Z} denotes the vertical grid line intersecting at point (\textit{i},\textit{j})$\in$ $\textbf{Z}^2$,called the grid point,where i and j multiples of g.
+\break
+
+
+\textit{Grid segment}: A grid segment is the set of points on a grid line between and inclusive of two consecutive grid point.Thus,the horizontal grid segment belonging to ${\textit{l}}_H$(\textit{j}) and lying between two consecutive vertical grid lines, ${\textit{l}}_V$(\textit{i}) and ${\textit{l}}_V$(\textit{i}+\textit{j}),is  \textit{$s_j^{i}$} =\{(\textit{ $\i^{'}$},\textit{j})$\in$ ${\textit{l}}_H$(\textit{j}):\textit{i}$\leq$\textit{$i^{'}$}$\leq$\textit{i}+\textit{g}\}.Similarly,the vertical the vertical grid segment belonging to ${\textit{l}}_V$(\textit{i}) between ${\textit{l}}_H$(\textit{j}) and ${\textit{l}}_V$(\textit{i}+\textit{j}), is \textit{$s_i^{j}$} =\{(\textit{i},\textit{ $\j^{'}$})$\in$ ${\textit{l}}_H$(\textit{j}):\textit{j}$\leq$\textit{$j^{'}$}$\leq$\textit{j}+\textit{g}\}.
+\break
+
+
+\textit{Unit grid block (UGB)}: The horizontal digital line ${\textit{l}}_H$(\textit{j}) divides $\textbf{Z}^2$ into half-planes ,which are given by  \textit{$h_H^{+}$}(\textit{j}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\j^{'}$}$\geq$\textit{j}\} and  \textit{$h_H^{-}$}(\textit{j}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\j^{'}$}$\leq$\textit{j}\}.Similarly, ${\textit{l}}_V$(\textit{i}) divides \textbf{$Z^{2}$} into two half-planes, which are \textit{$h_V^{+}$}(\textit{i}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\i^{'}$}$\geq$\textit{i}\} and  \textit{$h_V^{-}$}(\textit{j}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\i^{'}$}$\leq$\textit{i}\}. Then the set, given by (\textit{$h_V^{+}$}(\textit{i})$\cap$\textit{$h_V^{-}$}(\textit{i}+\textit{g})$\cap$\textit{$h_H^{+}$}(\textit{j})$\cap$\textit{$h_H^{-}$}(\textit{j}+\textit{g})),is defined as the unit grid block,UGB(\textit{i},\textit{j}).The interior of \textit{$U_{1}$} :=UGB(\textit{i},\textit{j}) is given by \textit{$U_{1}$} \ (\textit{$s_{i}^{j}$}$\cup$\textit{$s_{i+g}^{j}$}$\cup$ \textit{$s_{i}^{j}$}$\cup$\textit{$s_{i+g}^{j}$}). Hence, for a given grid point, qði; jÞ, there are four neighbouring UGBs, namely, \textit{$U_{1}$} :=UGB(\textit{i},\textit{j}),\textit{$U_{2}$} :=UGB(\textit{i-g},\textit{j}),\textit{$U_{3}$} :=UGB(\textit{i-g},\textit{j-g}) and \textit{$U_{4}$} :=UGB(\textit{i-g},\textit{j}).
+\break
+ 
+
+\textit{Isothetic polygon}: An isothetic polygon \textit{P} is a simple polygon of finite size in \textbf{$Z^{2}$} whose alternative sides are subsets of the members of \textbf{H} and \textbf{V}.The polygon \textit{P},hence given by a finite set of UGBs,is represented by the sequence of its vertices,which are grid points.The border \textit{$B_{P}$} of \textit{P} is the set of points belonging to its sides.The interior of \textit{P} is the set of points in the union of its constituting UGBs excluding the border of P.
+\break
+
+
+\textit{Outer isothetic cover}: The outer (isothetic) cover (OIC), denoted by $\bar{P}$(\textit{S}), is a set of outer polygons and (outer) hole polygons, such that the region, given by the union of the outer polygons minus the union of the interiors of the hole polygons, contains a UGB if and only if it has object occupancy (i.e., has a nonempty intersection with S).
+\break
 
 
 \subsection{Including Equations}
 Write equations with a gap (both in top and bottom) from the text, starting from the beginning of the line and put the equation no. at the extreme right of the column as follows. Refer to this as Eqn.~(\ref{Equation:1}).
+
 
 \begin{equation}\label{Equation:1}
 \rho(x,y) = \frac{cov(x,y)}{\sigma_x\sigma_y} = \frac{1}{n-1}\sum\frac{(x-\overline{x})(y-\overline{y})}{\sigma_x\sigma_y}.
