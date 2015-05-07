@@ -18,9 +18,10 @@
 \usepackage{multicol}
 \usepackage{algorithm}
 \usepackage{algorithmic}
+\usepackage{hyperref}
 
 % For definitions, theorems, lemmas, proofs, corollaries and observations
-\newtheorem{DEF}{Definition}[section]
+\newtheorem{DEF}{Definition}
 \newtheorem{THM}{Theorem}[section]
 \newtheorem{LEM}{Lemma}[section]
 \newtheorem{COR}{Corollary}[section]
@@ -66,8 +67,8 @@ by \\
 \hspace{.05cm} Under the supervision of\\
 \hspace{.05cm} {\large \bf{Arindam Biswas}}\\
 \vspace {0.8cm}
-Roll number: Hx02, Hy34, Hx??\\
-Registration number: 110812005, 110812025, 110812047 of 2012-16\\
+Roll number: Hx02, Hy34, Hx01\\
+Registration number: 110812005, 110812025, 110812047 of 2013-14\\
 B.E. 3rd year\\
 \vspace*{0.7cm}
 \begin{figure}[h]
@@ -107,14 +108,14 @@ INDIAN INSTITUTE OF ENGINEERING SCIENCE AND TECHNOLOGY, SHIBPUR\\
  \huge \textbf{CERTIFICATE}
  \vspace{1cm}
 \end{center}
-This is to certify that the work presented in this report entitled ``ALGORITHMIC ART USING RANDOM ISOTHETIC POLYGONS'', submitted by Binayak Ghosh, having the examination roll number 111208005, has been carried out under my supervision for the partial fulfilment of the degree of Bachelor of Technology in Information Technology during the session 2014-15 in the Department of Information Technology, Indian Institute of Engineering Science and Technology, Shibpur.\\
+This is to certify that the work presented in this report entitled ``ALGORITHMIC ART USING RANDOM ISOTHETIC POLYGONS'', submitted by Binayak Ghosh, Ronit Halder and Firoz Rahaman having the examination roll numbers 111208005, 111208025 and 111208047 respectively has been carried out under my supervision for the partial fulfilment of the degree of Bachelor of Technology in Information Technology during the session 2014-15 in the Department of Information Technology, Indian Institute of Engineering Science and Technology, Shibpur.\\
 \vspace{1.5cm}
 
 \begin{minipage}[t]{0.48\linewidth}
 \begin{flushleft}
 ---------------------------------------\\
-NAME OF THE SUPERVISOR\\
-Assistant/Associate Professor\\
+Arindam Biswas\\
+Associate Professor\\
 Department of Information Technology\\
 Indian Institute of Engineering Science and Technology, Shibpur
 \end{flushleft}
@@ -122,7 +123,7 @@ Indian Institute of Engineering Science and Technology, Shibpur
 \begin{minipage}[t]{0.48\linewidth}
 \begin{flushright}
 ---------------------------------------\\
-NAME OF THE HEAD\\
+Arindam Biswas\\
 Head of the Department\\
 Department of Information Technology\\
 Indian Institute of Engineering Science and Technology, Shibpur
@@ -166,7 +167,9 @@ Date: 08/05/2015
 \begin{minipage}[t]{0.48\linewidth}
 \begin{flushright}
 ---------------------------------------\\
-Binayak Ghosh\\
+Binayak Ghosh,\\
+Ronit Halder,\\
+Firoz Rahaman\\
 Department of Information Technology\\
 Indian Institute of Engineering Science and Technology, Shibpur
 \end{flushright}
@@ -209,120 +212,44 @@ So generation of patterns a system needs to be created which on being provided s
 Isothetic polygons can be used to generate isothetic covers of binary images which can then be divided into unit gird blocks. These blocks can then be filled with different colors based on some algorithms to produce visually appealing patterned images. Thus using isothetic polygons a generation system can be created which can produce some random patterns based on binary images of regular day to day objects/shapes. 
 \vspace{0.3cm}
 
-\newpage
-
-
-
-
-\section{RELATED WORKS}
-Include the details about state-of-the-art and how your problem is different and novel from the existing ones.
 
 
 
 
 \newpage
+
 
 
 
 
 \section{PRELIMINARIES AND DEFINITIONS}
-
-
-\textit{Digital Plane}: The digital plane,$\textbf{Z}^2$,is the set of all points having 
-integer coordinates in the real plane $\textbf{R}^2$ .A point in the digital plane is 
-called a digital point,or called a pixel in case of a digital image.Henceforth,the term
-"point" and "digital point" will be interchangeably used.
-\break
-
-
-\textit{Digital grid}: A grid \textbf{G} := (\textbf{H},\textbf{V}) consists of a set \textbf{H} of horizontal grid lines and a set \textbf{V} of vertical grid lines, where, \textbf{H} = \{...,${\textit{l}}_H$(\textit{j-2g}),${\textit{l}}_H$(\textit{j-g}), ${\textit{l}}_H$(\textit{j}), ${\textit{l}}_H$(\textit{j+g}), ${\textit{l}}_H$(\textit{j+2g}),...\}{$\subset $$\textbf{Z}^2$} and \textbf{V}=\{...,${\textit{l}}_V$(\textit{j-2g}),${\textit{l}}_V$(\textit{j-g}), ${\textit{l}}_V$(\textit{j}), ${\textit{l}}_V$(\textit{j+g}), ${\textit{l}}_V$(\textit{j+2g}),...\}{$\subset $$\textbf{Z}^2$}, for a grid size,\textit{g} $\in$ {$\textbf{Z}^+$}. Here, ${\textit{l}}_H$ := \{(\textit{ $\i^{'}$},\textit{j}):\textit{$\i^{'}$}$\in$ \textbf{Z} denotes the horizontal grid line and ${\textit{l}}_V$ := \{(\textit{i},\textit{ $\j^{'}$}):\textit{$\j^{'}$}$\in$ \textbf{Z} denotes the vertical grid line intersecting at point (\textit{i},\textit{j})$\in$ $\textbf{Z}^2$,called the grid point,where i and j multiples of g.
-\break
-
-
-\textit{Grid segment}: A grid segment is the set of points on a grid line between and inclusive of two consecutive grid point.Thus,the horizontal grid segment belonging to ${\textit{l}}_H$(\textit{j}) and lying between two consecutive vertical grid lines, ${\textit{l}}_V$(\textit{i}) and ${\textit{l}}_V$(\textit{i}+\textit{j}),is  \textit{$s_j^{i}$} =\{(\textit{ $\i^{'}$},\textit{j})$\in$ ${\textit{l}}_H$(\textit{j}):\textit{i}$\leq$\textit{$i^{'}$}$\leq$\textit{i}+\textit{g}\}.Similarly,the vertical the vertical grid segment belonging to ${\textit{l}}_V$(\textit{i}) between ${\textit{l}}_H$(\textit{j}) and ${\textit{l}}_V$(\textit{i}+\textit{j}), is \textit{$s_i^{j}$} =\{(\textit{i},\textit{ $\j^{'}$})$\in$ ${\textit{l}}_H$(\textit{j}):\textit{j}$\leq$\textit{$j^{'}$}$\leq$\textit{j}+\textit{g}\}.
-\break
-
-
-\textit{Unit grid block (UGB)}: The horizontal digital line ${\textit{l}}_H$(\textit{j}) divides $\textbf{Z}^2$ into half-planes ,which are given by  \textit{$h_H^{+}$}(\textit{j}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\j^{'}$}$\geq$\textit{j}\} and  \textit{$h_H^{-}$}(\textit{j}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\j^{'}$}$\leq$\textit{j}\}.Similarly, ${\textit{l}}_V$(\textit{i}) divides \textbf{$Z^{2}$} into two half-planes, which are \textit{$h_V^{+}$}(\textit{i}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\i^{'}$}$\geq$\textit{i}\} and  \textit{$h_V^{-}$}(\textit{j}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\i^{'}$}$\leq$\textit{i}\}. Then the set, given by (\textit{$h_V^{+}$}(\textit{i})$\cap$\textit{$h_V^{-}$}(\textit{i}+\textit{g})$\cap$\textit{$h_H^{+}$}(\textit{j})$\cap$\textit{$h_H^{-}$}(\textit{j}+\textit{g})),is defined as the unit grid block,UGB(\textit{i},\textit{j}).The interior of \textit{$U_{1}$} :=UGB(\textit{i},\textit{j}) is given by \textit{$U_{1}$} \ (\textit{$s_{i}^{j}$}$\cup$\textit{$s_{i+g}^{j}$}$\cup$ \textit{$s_{i}^{j}$}$\cup$\textit{$s_{i+g}^{j}$}). Hence, for a given grid point, qði; jÞ, there are four neighbouring UGBs, namely, \textit{$U_{1}$} :=UGB(\textit{i},\textit{j}),\textit{$U_{2}$} :=UGB(\textit{i-g},\textit{j}),\textit{$U_{3}$} :=UGB(\textit{i-g},\textit{j-g}) and \textit{$U_{4}$} :=UGB(\textit{i-g},\textit{j}).
-\break
- 
-
-\textit{Isothetic polygon}: An isothetic polygon \textit{P} is a simple polygon of finite size in \textbf{$Z^{2}$} whose alternative sides are subsets of the members of \textbf{H} and \textbf{V}.The polygon \textit{P},hence given by a finite set of UGBs,is represented by the sequence of its vertices,which are grid points.The border \textit{$B_{P}$} of \textit{P} is the set of points belonging to its sides.The interior of \textit{P} is the set of points in the union of its constituting UGBs excluding the border of P.
-\break
-
-
-\textit{Outer isothetic cover}: The outer (isothetic) cover (OIC), denoted by $\bar{P}$(\textit{S}), is a set of outer polygons and (outer) hole polygons, such that the region, given by the union of the outer polygons minus the union of the interiors of the hole polygons, contains a UGB if and only if it has object occupancy (i.e., has a nonempty intersection with S).
-\break
-
-
-\subsection{Including Equations}
-Write equations with a gap (both in top and bottom) from the text, starting from the beginning of the line and put the equation no. at the extreme right of the column as follows. Refer to this as Eqn.~(\ref{Equation:1}).
-
-
-\begin{equation}\label{Equation:1}
-\rho(x,y) = \frac{cov(x,y)}{\sigma_x\sigma_y} = \frac{1}{n-1}\sum\frac{(x-\overline{x})(y-\overline{y})}{\sigma_x\sigma_y}.
-\end{equation}
-
-
-\subsection{Including Figures}
-Figures should have high resolution and dpi, and they should be fitted to appropriate places in the text with captions as shown in Figure~\ref{Figure:1}.
-
-% Convert the figures into eps format
-\begin{figure}[htp]
-\centering
-\includegraphics[scale=0.6]{Sample.eps}
-\caption{Caption of the figure showing a network of cities.}
-\label{Figure:1}
-\end{figure}
-
-
-\subsection{Including Tables}
-Tables should be numbered. Keep the tables in appropriate places with captions as shown in Table~\ref{Table:1}.
-
-% To span the table in a single column use \begin{table*} and \end{table*}
-\begin{table}[htp]
-\begin{center}
-\caption{Caption for Table~1.}
-\begin{tabular}{|c|c|}
-\hline
-\textbf{Header 1} & \textbf{Header 2} \\
-\hline
-Cell 1,1 & Cell 1,2 \\
-Cell 2,1 & Cell 2,2 \\
-Cell 3,1 & Cell 3,2 \\
-\hline
-\end{tabular}
-\label{Table:1}
-\end{center}
-\end{table}
-
-
-\subsection{Including Definitions, Theorems, etc.}
-Definitions should be written as below in Definition~\ref{Definition:1}.
-
-\begin{DEF}[Topic]\label{Definition:1}
-Write the definition.
+\begin{DEF}
+  \textnormal{Digital Plane}: The digital plane, $\textbf{Z}^2$, is the set of all points having integer coordinates in the real plane $\textbf{R}^2$.A point in the digital plane is called a digital point,or called a pixel in case of a digital image. Henceforth, the term "point" and "digital point" will be interchangeably used.
 \end{DEF}
 
-Theorems and lemmas should be written as shown in Theorem~\ref{Theorem:1} and Lemma~\ref{Lemma:1}, respectively.
 
-\begin{THM}\label{Theorem:1}
-State the theorem.
-\end{THM}
-\vspace{0.05in}
-\textbf{Proof.} Prove the theorem.
-\qed
-\vspace{0.05in}
+\begin{DEF}
+\textnormal{Digital grid}: A grid \textbf{G} := (\textbf{H},\textbf{V}) consists of a set \textbf{H} of horizontal grid lines and a set \textbf{V} of vertical grid lines, where, \textbf{H} = \{...,${\textit{l}}_H$(\textit{j-2g}),${\textit{l}}_H$(\textit{j-g}), ${\textit{l}}_H$(\textit{j}), ${\textit{l}}_H$(\textit{j+g}), ${\textit{l}}_H$(\textit{j+2g}),...\}{$\subset $$\textbf{Z}^2$} and \textbf{V}=\{...,${\textit{l}}_V$(\textit{j-2g}),${\textit{l}}_V$(\textit{j-g}), ${\textit{l}}_V$(\textit{j}), ${\textit{l}}_V$(\textit{j+g}), ${\textit{l}}_V$(\textit{j+2g}),...\}{$\subset $$\textbf{Z}^2$}, for a grid size,\textit{g} $\in$ {$\textbf{Z}^+$}. Here, ${\textit{l}}_H$ := \{(\textit{ $\i^{'}$},\textit{j}):\textit{$\i^{'}$}$\in$ \textbf{Z} denotes the horizontal grid line and ${\textit{l}}_V$ := \{(\textit{i},\textit{ $\j^{'}$}):\textit{$\j^{'}$}$\in$ \textbf{Z} denotes the vertical grid line intersecting at point (\textit{i},\textit{j})$\in$ $\textbf{Z}^2$,called the grid point,where i and j multiples of g.
+\end{DEF}
 
-\begin{LEM}\label{Lemma:1}
-State the theorem.
-\end{LEM}
-\vspace{0.05in}
-\textbf{Proof.} Prove the lemma.
-\qed
-\vspace{0.05in}
+\begin{DEF}
+\textnormal{Grid segment}: A grid segment is the set of points on a grid line between and inclusive of two consecutive grid point.Thus,the horizontal grid segment belonging to ${\textit{l}}_H$(\textit{j}) and lying between two consecutive vertical grid lines, ${\textit{l}}_V$(\textit{i}) and ${\textit{l}}_V$(\textit{i}+\textit{j}),is  \textit{$s_j^{i}$} =\{(\textit{ $\i^{'}$},\textit{j})$\in$ ${\textit{l}}_H$(\textit{j}):\textit{i}$\leq$\textit{$i^{'}$}$\leq$\textit{i}+\textit{g}\}.Similarly,the vertical the vertical grid segment belonging to ${\textit{l}}_V$(\textit{i}) between ${\textit{l}}_H$(\textit{j}) and ${\textit{l}}_V$(\textit{i}+\textit{j}), is \textit{$s_i^{j}$} =\{(\textit{i},\textit{ $\j^{'}$})$\in$ ${\textit{l}}_H$(\textit{j}):\textit{j}$\leq$\textit{$j^{'}$}$\leq$\textit{j}+\textit{g}\}.
+\end{DEF}
 
 
+\begin{DEF}
+\textnormal{Unit grid block (UGB)}: The horizontal digital line ${\textit{l}}_H$(\textit{j}) divides $\textbf{Z}^2$ into half-planes ,which are given by  \textit{$h_H^{+}$}(\textit{j}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\j^{'}$}$\geq$\textit{j}\} and  \textit{$h_H^{-}$}(\textit{j}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\j^{'}$}$\leq$\textit{j}\}. Similarly, ${\textit{l}}_V$(\textit{i}) divides \textbf{$Z^{2}$} into two half-planes, which are \textit{$h_V^{+}$}(\textit{i}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\i^{'}$}$\geq$\textit{i}\} and  \textit{$h_V^{-}$}(\textit{j}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\i^{'}$}$\leq$\textit{i}\}. Then the set, given by (\textit{$h_V^{+}$}(\textit{i})$\cap$\textit{$h_V^{-}$}(\textit{i}+\textit{g})$\cap$\textit{$h_H^{+}$}(\textit{j})$\cap$\textit{$h_H^{-}$}(\textit{j}+\textit{g})),is defined as the unit grid block,UGB(\textit{i},\textit{j}).The interior of \textit{$U_{1}$} :=UGB(\textit{i},\textit{j}) is given by \textit{$U_{1}$} \ (\textit{$s_{i}^{j}$}$\cup$\textit{$s_{i+g}^{j}$}$\cup$ \textit{$s_{i}^{j}$}$\cup$\textit{$s_{i+g}^{j}$}). Hence, for a given grid point, qði; jÞ, there are four neighbouring UGBs, namely, \textit{$U_{1}$} :=UGB(\textit{i},\textit{j}),\textit{$U_{2}$} :=UGB(\textit{i-g},\textit{j}),\textit{$U_{3}$} :=UGB(\textit{i-g},\textit{j-g}) and \textit{$U_{4}$} :=UGB(\textit{i-g},\textit{j}).
+\end{DEF}
+ 
+
+\begin{DEF}
+\textnormal{Isothetic polygon}: An isothetic polygon \textit{P} is a simple polygon of finite size in \textbf{$Z^{2}$} whose alternative sides are subsets of the members of \textbf{H} and \textbf{V}.The polygon \textit{P},hence given by a finite set of UGBs,is represented by the sequence of its vertices,which are grid points.The border \textit{$B_{P}$} of \textit{P} is the set of points belonging to its sides.The interior of \textit{P} is the set of points in the union of its constituting UGBs excluding the border of P.
+\end{DEF}
+
+
+\begin{DEF}
+\textnormal{Outer isothetic cover}: The outer (isothetic) cover (OIC), denoted by $\bar{P}$(\textit{S}), is a set of outer polygons and (outer) hole polygons, such that the region, given by the union of the outer polygons minus the union of the interiors of the hole polygons, contains a UGB if and only if it has object occupancy (i.e., has a nonempty intersection with S).
+\end{DEF}
 
 
 \newpage
@@ -331,32 +258,72 @@ State the theorem.
 
 
 \section{PROBLEM DEFINITION}
-Write the problem statement formally with necessary details.
+To generate outer isothetic cover from a given input image. Divide the isothetic cover into Unit Grid Blocks and then fill each UGB with a color based on some algorithms thereby generate visually appealing patterns.
 
 
+\section{PROCESSES USED}
+We used the combinatorial algorithm developed by Arindam Biswas, Partha Bhowmick and Bhargab B. Bhattacharya as stated in their paper ``Construction of isothetic covers of a digital object: A combinatorial approach"\textsuperscript{\cite{lamport94}} to construct an outer isothetic cover from a given binary image. We then divided the isothetic cover into Unit Grid Blocks (UGBs) and animated the steps to create a nice visualisation. The following figure show different phases of the animation: 
 
-
-\newpage
-
-
-
-
-\section{PROPOSED APPROACH}
-Describe the proposed methods and approaches.
+ 
 
 
 \subsection{Including Algorithms}
-The algorithms are formally written as shown in Algorithm~\ref{Algorithm:1}.
 
 \begin{algorithm}[htp]
-\caption{Caption for Algorithm~1}
-\textbf{Input:} The set of inputs.\par
-\textbf{Output:} The set of outputs.\par
+\caption{blurr-effect}
+\textbf{Input:} I(The image as 2D Matrix),gsize(Grid size).\par 
+\textbf{Output:} Modified Image I with blur effect.\par
 \textbf{Steps of the algorithm:}
 \begin{algorithmic}[1]
-\STATE Statement(s)
-\FOR{each case $v_{i}\in V$}
-    \STATE Repeat this
+\STATE ncols $\longleftarrow$ width of input image I
+\STATE nrows $\longleftarrow$ hight of input image I
+\STATE start $\longleftarrow$ 4/5 part of gsize
+\FOR{i $\longleftarrow$ 1 to nrows}
+	\STATE P $\longleftarrow$ ith row of image as a list of pixels
+	\IF{j th element of P is not a white pixel}
+		\STATE count $\longleftarrow$ 0
+		\FOR{i $\longleftarrow$ (j+start) to (j+gsize-1)}		
+			\STATE count $\longleftarrow$ count+1
+			\STATE $P_k$$\longleftarrow$$P_k$$\times$((2$\times$(gsize-start)-count)/2$\times$(gc-start)+((cnt/2)$\times$(gc-start))$\times$ $P_{(k+gsize)}$
+		\ENDFOR
+		\FOR{i $\longleftarrow$ (j+1) to (j+2$\times$gsize)}		
+			\STATE count $\longleftarrow$ count+1
+			\STATE $P_{k}$$\longleftarrow$$P_{(k-gsize)}$$\times$((2$\times$(gsize-start)-count)/2$\times$(gc-start)+((cnt/2)$\times$(gc-start))$\times$ $P_{k}$
+		\ENDFOR
+   \ENDIF
+\ENDFOR
+\FOR{i $\longleftarrow$ 1 to ncols}
+	\STATE P $\longleftarrow$ $i^{th}$ column of image as a list of pixels
+	\IF{$i^{th}$ element of P is not a white pixel}
+		\STATE count $\longleftarrow$ 0
+		\FOR{j $\longleftarrow$ (i+start+1) to (i+gsize)}		
+			\STATE count $\longleftarrow$ count+1
+			\STATE $P_k$$\longleftarrow$$P_k$$\times$((2$\times$(gsize-start)-count)/2$\times$(gc-start)+((cnt/2)$\times$(gc-start))$\times$ $P_{(k+gsize)}$
+		\ENDFOR
+		\FOR{j $\longleftarrow$ (i+1) to (i+2$\times$gsize)}		
+			\STATE count $\longleftarrow$ count+1
+			\STATE $P_{k}$$\longleftarrow$$P_{(k-gsize)}$$\times$((2$\times$(gsize-start)-count)/2$\times$(gc-start)+((cnt/2)$\times$(gc-start))$\times$ $P_{k}$
+		\ENDFOR
+   \ENDIF
+\ENDFOR
+\end{algorithmic}
+\label{Algorithm:2}
+\end{algorithm}
+
+\begin{algorithm}[htp]
+\caption{Random-fill}
+\textbf{Input:} I(The image as 2D Matrix),gsize(Grid size).\par
+\textbf{Output:} Modified image I after filling random color.\par
+\textbf{Steps of the algorithm:}
+\begin{algorithmic}[1]
+\STATE nugb $\longleftarrow$ no of vertical ugb in image
+\FOR{i $\longleftarrow$ 1 to nugb}
+    \STATE p $\longleftarrow$ $i^{th}$ horizontal row of UGB's in I
+    \FOR{ for each UGB in p}
+    		\IF{the UGB is inside the isothetic cover}
+    			\STATE fill the ugb with a random color
+    		\ENDIF
+	\ENDFOR
 \ENDFOR
 \IF{Condition}
     \STATE Do this
@@ -364,17 +331,11 @@ The algorithms are formally written as shown in Algorithm~\ref{Algorithm:1}.
     \STATE Do that
 \ENDIF
 \end{algorithmic}
-\label{Algorithm:1}
+\label{Algorithm:2}
 \end{algorithm}
-
-
-\subsection{Including References}
-References to the web materials should be put as shown in \cite{Miscellaneous}, to the journal papers as shown in \cite{Journal}, to the conference papers as shown in \cite{Conference}, and to the books as shown in \cite{Book}.
-
-
-
-
 \newpage
+
+
 
 
 
@@ -401,9 +362,25 @@ State the concluding remarks and mention the future scopes and limitations of th
 
 
 
+\begin{thebibliography}{9}
+	\bibitem{lamport94}
+	Leslie Lamport,
+	\emph{\LaTeX: a document preparation system},
+	Addison Wesley, Massachusetts,
+	2nd edition,
+	1994.
+
+	\bibitem{lamport95}
+	Arindam Biswas, blabla.
+	
+\end{thebibliography}
+
+\newpage
+
+
 % BibTeX users use the following
-\bibliographystyle{plain}           % basic style
-\bibliography{Reference}            % name your BibTeX database file
+% \bibliographystyle{plain}           % basic style
+% \bibliography{Reference}            % name your BibTeX database file
 
 % Non-BibTeX users use the following
 %\begin{thebibliography}{}
