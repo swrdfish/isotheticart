@@ -1,0 +1,391 @@
+%% ----------------------------------------------------------------
+%   Template created by Dr. Malay Bhattacharyya, Department of IT
+%                           IIEST, Shibpur
+%                           Copyright 2015
+%% ----------------------------------------------------------------
+\documentclass[12pt]{article}
+% Packages to be added here
+\usepackage{geometry}
+\geometry{verbose,a4paper,tmargin=30mm,bmargin=30mm,lmargin=30mm,rmargin=20mm}
+\usepackage{graphics}
+\usepackage{setspace}
+\usepackage{url}
+\usepackage{epsfig}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% For definitions, theorems, lemmas, proofs, corollaries and observations
+\newtheorem{DEF}{Definition}[section]
+\newtheorem{THM}{Theorem}[section]
+\newtheorem{LEM}{Lemma}[section]
+\newtheorem{COR}{Corollary}[section]
+\newtheorem{PRF}{Proof}[]
+\newtheorem{OBS}{Observation}[section]
+
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
+
+\onehalfspacing
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\newcommand{\LyX}{L\kern-.1667em\lower.25em\hbox{Y}\kern-.125emX\spacefactor1000}
+
+\makeatother
+
+\begin{document}
+
+
+
+
+% Title page
+\begin{titlepage}
+\thispagestyle{empty}
+{\centering
+{\large A Project Report on}\\
+\vspace{0.5cm}
+\large
+{\Huge ALGORITHMIC ART USING RANDOM ISOTHETIC POLYGON}\\
+\vspace{0.5cm}
+Submitted to the Department of Information Technology\\
+\vspace{1cm}
+{\Large\bf For the partial fulfilment of the degree of B.E. in Information Technology}\\
+\vspace{1cm}
+by \\
+\vspace{.5cm}
+\hspace{.05cm} {\large \bf{Binayak Ghosh}}\\
+\hspace{.05cm} {\large \bf{Ronit Halder}}\\
+\hspace{.05cm} {\large \bf{Firoz Rahaman}}\\
+\vspace {0.3cm}
+\hspace{.05cm} Under the supervision of\\
+\hspace{.05cm} {\large \bf{Arindam Biswas}}\\
+\vspace {0.8cm}
+Roll number: Hx02, Hy34, Hx??\\
+Registration number: 110812005, 110812025, 110812047 of 2012-16\\
+B.E. 3rd year\\
+\vspace*{0.7cm}
+\begin{figure}[h]
+{\centering {\includegraphics[scale=1.5]{Logo_IIEST.eps}}\par}
+\end{figure}
+Department of Information Technology\\
+INDIAN INSTITUTE OF ENGINEERING SCIENCE AND TECHNOLOGY, SHIBPUR\\
+\begin{center}
+\textit{May, 2015}
+\end{center}
+
+{\centering
+\hspace{6.5cm} \date{\today}}
+}
+\pagebreak
+\end{titlepage}
+
+
+
+
+\newpage
+
+
+
+
+% Certificate page
+\thispagestyle{empty}
+\begin{center}
+  \large \textbf{Department of Information Technology\\
+  Indian Institute of Engineering Science and Technology, Shibpur}
+\begin{figure}
+  \centering
+  \includegraphics[scale=1]{Logo_IIEST.eps}\\
+\end{figure}
+\\
+ \vspace{1cm}
+ \huge \textbf{CERTIFICATE}
+ \vspace{1cm}
+\end{center}
+This is to certify that the work presented in this report entitled ``ALGORITHMIC ART USING RANDOM ISOTHETIC POLYGONS'', submitted by Binayak Ghosh, having the examination roll number 111208005, has been carried out under my supervision for the partial fulfilment of the degree of Bachelor of Technology in Information Technology during the session 2014-15 in the Department of Information Technology, Indian Institute of Engineering Science and Technology, Shibpur.\\
+\vspace{1.5cm}
+
+\begin{minipage}[t]{0.48\linewidth}
+\begin{flushleft}
+---------------------------------------\\
+NAME OF THE SUPERVISOR\\
+Assistant/Associate Professor\\
+Department of Information Technology\\
+Indian Institute of Engineering Science and Technology, Shibpur
+\end{flushleft}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+\begin{flushright}
+---------------------------------------\\
+NAME OF THE HEAD\\
+Head of the Department\\
+Department of Information Technology\\
+Indian Institute of Engineering Science and Technology, Shibpur
+\end{flushright}
+\end{minipage}
+\vspace{1.5cm}
+
+\begin{minipage}[t]{0.48\linewidth}
+-----------------------------------------\\
+Dean (Academic)
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+\begin{center}
+Date: 08/05/2015
+\end{center}
+\end{minipage}
+
+
+
+
+\newpage
+
+
+
+
+% Acknowledgment page
+\thispagestyle{empty}
+\begin{center}
+  \Huge \textbf{Acknowledgements}
+\end{center}
+\vspace{2cm}
+Being a novice in the area of research, this project would not have been possible without constant
+supervision of Prof. Arindam Biswas. The combinatorial algorithm for construction of isothetic cover of digital objects, developed by Prof. Arindam Biswas and his colleagues, formed the basis of our project. Also, the works of Mike Bostock in the field of algorithmic visualisation have served as great source for inspiration.\\
+\vspace{2.5cm}
+
+\begin{minipage}[t]{0.48\linewidth}
+\begin{flushleft}
+Date: 08/05/2015
+\end{flushleft}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+\begin{flushright}
+---------------------------------------\\
+Binayak Ghosh\\
+Department of Information Technology\\
+Indian Institute of Engineering Science and Technology, Shibpur
+\end{flushright}
+\end{minipage}
+
+
+
+
+\newpage
+
+
+
+
+% Abstract page
+\begin{abstract}
+This report summarizes the work done as part of a semester project under the supervision of Prof. Arindam Biswas. The project explores the fascinating field of generative art. Using random isothetic polygons interesting visually stimulating patterns have been generated from existing images. These patterns are shown in the report and the processes used to generate them have been discussed.
+
+\end{abstract}
+
+
+
+
+% Other front pages
+\pagenumbering{roman}
+\newpage
+\tableofcontents
+\newpage
+\newenvironment{mydef}[1]{\begin{definition} #1 \mbox{\\}
+\rm}{\end{definition}}
+\pagenumbering{arabic}
+
+
+
+
+\section{INTRODUCTION}
+Algorithmic art or generative art refers to art (mainly visual art) that in whole or in part has been created with the use of an autonomous system. In such an art form the generative system is said to be the creation of the artist which in turn creates a set of images which are unique and visually appealing.  
+So generation of patterns a system needs to be created which on being provided some form of input will produce a set of images.
+
+\vspace{0.3cm} 
+Isothetic polygons can be used to generate isothetic covers of binary images which can then be divided into unit gird blocks. These blocks can then be filled with different colors based on some algorithms to produce visually appealing patterned images. Thus using isothetic polygons a generation system can be created which can produce some random patterns based on binary images of regular day to day objects/shapes. 
+\vspace{0.3cm}
+
+\newpage
+
+
+
+
+\section{RELATED WORKS}
+Include the details about state-of-the-art and how your problem is different and novel from the existing ones.
+
+
+
+
+\newpage
+
+
+
+
+\section{PRELIMINARIES AND DEFINITIONS}
+Write the precursory details in this section.
+
+
+\subsection{Including Equations}
+Write equations with a gap (both in top and bottom) from the text, starting from the beginning of the line and put the equation no. at the extreme right of the column as follows. Refer to this as Eqn.~(\ref{Equation:1}).
+
+\begin{equation}\label{Equation:1}
+\rho(x,y) = \frac{cov(x,y)}{\sigma_x\sigma_y} = \frac{1}{n-1}\sum\frac{(x-\overline{x})(y-\overline{y})}{\sigma_x\sigma_y}.
+\end{equation}
+
+
+\subsection{Including Figures}
+Figures should have high resolution and dpi, and they should be fitted to appropriate places in the text with captions as shown in Figure~\ref{Figure:1}.
+
+% Convert the figures into eps format
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.6]{Sample.eps}
+\caption{Caption of the figure showing a network of cities.}
+\label{Figure:1}
+\end{figure}
+
+
+\subsection{Including Tables}
+Tables should be numbered. Keep the tables in appropriate places with captions as shown in Table~\ref{Table:1}.
+
+% To span the table in a single column use \begin{table*} and \end{table*}
+\begin{table}[htp]
+\begin{center}
+\caption{Caption for Table~1.}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Header 1} & \textbf{Header 2} \\
+\hline
+Cell 1,1 & Cell 1,2 \\
+Cell 2,1 & Cell 2,2 \\
+Cell 3,1 & Cell 3,2 \\
+\hline
+\end{tabular}
+\label{Table:1}
+\end{center}
+\end{table}
+
+
+\subsection{Including Definitions, Theorems, etc.}
+Definitions should be written as below in Definition~\ref{Definition:1}.
+
+\begin{DEF}[Topic]\label{Definition:1}
+Write the definition.
+\end{DEF}
+
+Theorems and lemmas should be written as shown in Theorem~\ref{Theorem:1} and Lemma~\ref{Lemma:1}, respectively.
+
+\begin{THM}\label{Theorem:1}
+State the theorem.
+\end{THM}
+\vspace{0.05in}
+\textbf{Proof.} Prove the theorem.
+\qed
+\vspace{0.05in}
+
+\begin{LEM}\label{Lemma:1}
+State the theorem.
+\end{LEM}
+\vspace{0.05in}
+\textbf{Proof.} Prove the lemma.
+\qed
+\vspace{0.05in}
+
+
+
+
+\newpage
+
+
+
+
+\section{PROBLEM DEFINITION}
+Write the problem statement formally with necessary details.
+
+
+
+
+\newpage
+
+
+
+
+\section{PROPOSED APPROACH}
+Describe the proposed methods and approaches.
+
+
+\subsection{Including Algorithms}
+The algorithms are formally written as shown in Algorithm~\ref{Algorithm:1}.
+
+\begin{algorithm}[htp]
+\caption{Caption for Algorithm~1}
+\textbf{Input:} The set of inputs.\par
+\textbf{Output:} The set of outputs.\par
+\textbf{Steps of the algorithm:}
+\begin{algorithmic}[1]
+\STATE Statement(s)
+\FOR{each case $v_{i}\in V$}
+    \STATE Repeat this
+\ENDFOR
+\IF{Condition}
+    \STATE Do this
+\ELSE
+    \STATE Do that
+\ENDIF
+\end{algorithmic}
+\label{Algorithm:1}
+\end{algorithm}
+
+
+\subsection{Including References}
+References to the web materials should be put as shown in \cite{Miscellaneous}, to the journal papers as shown in \cite{Journal}, to the conference papers as shown in \cite{Conference}, and to the books as shown in \cite{Book}.
+
+
+
+
+\newpage
+
+
+
+
+\section{EXPERIMENTAL RESULTS}
+Results should be discussed here with appropriate comparison with other existing approaches (if applicable).
+
+
+
+
+\newpage
+
+
+
+
+\section{CONCLUSIONS}
+State the concluding remarks and mention the future scopes and limitations of the project.
+
+
+
+
+\newpage
+
+
+
+
+% BibTeX users use the following
+\bibliographystyle{plain}           % basic style
+\bibliography{Reference}            % name your BibTeX database file
+
+% Non-BibTeX users use the following
+%\begin{thebibliography}{}
+%
+% and use \bibitem to create references. Consult the Instructions
+% for authors for reference list style.
+%
+%\bibitem{} Author. Title. Journal, Volume(Number):Pages, Year
+
+\end{document}
+
+
