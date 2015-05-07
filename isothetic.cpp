@@ -365,6 +365,15 @@ void rainbowFill(Mat src, Mat dest, Mat thresMask, int gsize, bool animate) {
   cvtColor(dest, dest, CV_HSV2BGR, 0);
 }
 
+typedef struct frontierElem {
+  Point2i index;
+  unsigned char direction;
+  int weight;
+} felem;
+
+bool cmp(const felem &a, const felem &b){
+  return felem.weight > felem.weight;
+}
 
 void primsAlgoFill(Mat src, Mat dest, Mat thresMask, int gsize, bool animate){
   int nRows = dest.rows;
@@ -376,13 +385,88 @@ void primsAlgoFill(Mat src, Mat dest, Mat thresMask, int gsize, bool animate){
   unsigned char E = 1 << 3;
   
   int distance = 0;
-  vector<unsigned char> cells;
+  unsigned char cells[nRows][nCols];
   bool visited[nRows*nCols];
-  vector<Point2i> frontier;
+  vector<felem> frontier;
+
+  for(int iii = 0; iii < nRows; iii++){
+    for(int jjj = 0; jjj < nCols; jjj){
+      cells[i] = NULL;      
+    }
+  }
 
   Point2i topleftpoint = getTopLeftPoint(thresMask);
-  frontier.push_back(topleftpoint);
+  felem startpoint, nextpoint;
+  
+  startpoint.index = topleftpoint;
+  startpoint.direction = W;
+  startpoint.weight = rand();
+  frontier.push_back(startpoint);
 
+  startpoint.direction = S;
+  startpoint.weight = rand();
+  frontier.push_back(startpoint);
+  
+  // convert frontier to a heap
+  make_heap(frontier.begin(), frontier.end(), cmp);
+
+  Point2i i0, i1;
+  unsigned char d0, d1;
+  int x0, x1, y0, y1;
+  bool open;
+  felem edge = NULL;
+
+  while(!frontier.empty()){
+    pop_heap(frontier.begin(), frontier.end(), cmp);
+    edge = frontier.back();
+    frontier.pop_back();
+    i0 = edge.index;
+    d0 = edge.direction;    
+    x0 = i0.x;
+    y0 = i0.y;
+    if (d0 == N){
+
+    }
+    else if (d0 == S){
+
+    }
+    else if (d0 == E){
+
+    }
+    else {
+      
+    }
+
+    open = cells[i1] == NULL; // opposite not yet part of the maze 
+    if(open){
+      cells[i0] |= d0;
+      cells[i1] |= d1;
+      if (y1 > 0 && cells[i1- cellWidth] == NULL){
+        nextpoint.index = Point2i(i1);
+        nextpoint.direction = N;
+        nextpoint.weight = rand();
+        frontier.push_back(nextpoint);
+      }      
+      if (y1 < cellHeight - 1 && cells[i1 + cellWidth] == NULL){
+        nextpoint.index = Point2i(i1);
+        nextpoint.direction = S;
+        nextpoint.weight = rand();
+        frontier.push_back(nextpoint);
+      }
+      if (x1 > 0 && cells[i1- 1] == NULL){
+        nextpoint.index = Point2i(i1);
+        nextpoint.direction = W;
+        nextpoint.weight = rand();
+        frontier.push_back(nextpoint);
+      }
+      if (x1 < cellWidth - 1 && cells[i1 + 1] == NULL){
+        nextpoint.index = Point2i(i1);
+        nextpoint.direction = E;
+        nextpoint.weight = rand();
+        frontier.push_back(nextpoint);
+      }
+    }
+  }
 }
 
 void effect1(Mat &src,Mat &dest,int gsize){

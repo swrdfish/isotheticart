@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <queue>
 #include <math.h>
 #include <opencv2/core/core.hpp>
