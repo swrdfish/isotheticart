@@ -365,6 +365,26 @@ void rainbowFill(Mat src, Mat dest, Mat thresMask, int gsize, bool animate) {
   cvtColor(dest, dest, CV_HSV2BGR, 0);
 }
 
+
+void primsAlgoFill(Mat src, Mat dest, Mat thresMask, int gsize, bool animate){
+  int nRows = dest.rows;
+  int nCols = dest.cols;
+  
+  unsigned char N = 1 << 0;
+  unsigned char S = 1 << 1;
+  unsigned char W = 1 << 2;
+  unsigned char E = 1 << 3;
+  
+  int distance = 0;
+  vector<unsigned char> cells;
+  bool visited[nRows*nCols];
+  vector<Point2i> frontier;
+
+  Point2i topleftpoint = getTopLeftPoint(thresMask);
+  frontier.push_back(topleftpoint);
+
+}
+
 void effect1(Mat &src,Mat &dest,int gsize){
   int i,j,channels,k,gc,nRows,nCols,cnt;
   uchar *p,*q;
