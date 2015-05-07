@@ -1,6 +1,6 @@
 #include "isothetic.hpp"
 
-void drawGrid(Mat& img, int gsize) {
+void drawGrid(Mat& img, int gsize, Scalar color) {
   if (gsize < 2) return;
   int nRows = img.rows;
   int nCols = img.cols;
@@ -11,7 +11,7 @@ void drawGrid(Mat& img, int gsize) {
   for (int i = gsize; i < nCols; i += gsize) {
     p1 += stepx;
     p2 += stepx;
-    line(img, p1, p2, CV_RGB(255, 0, 255), 1, CV_AA, 0);
+    line(img, p1, p2, color, 1, CV_AA, 0);
   }
 
   p1 = Point2i(0, 0);
@@ -20,7 +20,7 @@ void drawGrid(Mat& img, int gsize) {
   for (int i = gsize; i < nRows; i += gsize) {
     p1 += stepy;
     p2 += stepy;
-    line(img, p1, p2, CV_RGB(255, 0, 255), 1, CV_AA, 0);
+    line(img, p1, p2, color, 1, CV_AA, 0);
   }
 }
 
@@ -192,6 +192,7 @@ void drawOIC(Mat& img, vector<Point2i> vertices, bool isfilled) {
 
 vector<Point2i> animateOIP(Mat& img, Mat& final, int gsize) {
   char c;
+  bool animate = true;
   vector<Point2i> vertices;
   Mat steps;
   Point2i topleftpoint = getTopLeftPoint(img);
@@ -223,12 +224,16 @@ vector<Point2i> animateOIP(Mat& img, Mat& final, int gsize) {
     if (d < 0) {
       d += 4;
     }
-    imshow("Final image", steps);
-    c = waitKey(10);
-    if (c == 113)
-      break;
-    else if (c == 112)
-      waitKey(500);
+    if (animate)
+    {
+      imshow("Final image", steps);
+      c = waitKey(10);
+      if (c == 113)
+        animate = false;
+      else if (c == 112)
+        waitKey(50000);
+      /* code */
+    }
   } while (q != startpoint);
   return vertices;
 }

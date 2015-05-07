@@ -5,6 +5,7 @@ int main(int argc, char** argv) {
   Mat image, result, final, test;
   int size;
   int opt;
+  Scalar color;
   int threshval = 200;
   char c;
 
@@ -24,18 +25,24 @@ int main(int argc, char** argv) {
   cvtColor(image, result, CV_RGB2GRAY);
 
   // Binarise the image
-  cout << "For inverted press 1 for normal 2 : ";
+  cout << "select image type: " << endl; 
+  cout << "[1] white object" << endl << "[2] black object" << endl; 
   cin >> opt;
-  if (opt == 1)
+  if (opt == 1){
     threshold(result, result, threshval, 255, CV_THRESH_BINARY_INV);
-  else
+    color = ISO_DARK;    
+  }
+  else {
     threshold(result, result, threshval, 255, CV_THRESH_BINARY);
+    color = ISO_LIGHT;
+  }
 
   // Draw the grid
-  cout << "size : ";
+  cout << "enter grid size: ";
   cin >> size;
   final = image.clone();
-  drawGrid(final, size);
+
+  drawGrid(final, size, color);
   // Display the binary image
   imshow("Threshold", result);
 
