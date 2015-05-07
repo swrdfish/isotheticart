@@ -21,5 +21,6 @@ vector<Point2i> animateOIP(Mat& img, Mat& final, int gsize);
 void drawOIC(Mat& img, vector<Point2i> vertices, bool filled);
 void patternRandRGB(Mat& src, Mat& dest, int gsize, bool animate);
 void rainbowFill(Mat src, Mat dest, Mat thresMask, int gsize, bool animate);
-
+void effect1(Mat &src, Mat &dest, int gsize);
+void effect2(Mat &src, Mat &dest, int gsize);
 #endif

@@ -186,7 +186,7 @@ void drawOIC(Mat& img, vector<Point2i> vertices, bool isfilled) {
       line(img, vertices[iii], vertices[iii + 1], CV_RGB(50, 50, 200), 2, CV_AA,
            0);
     }
-    line(img, vertices[iii], vertices[0], CV_RGB(50, 50, 200), 2, CV_AA, 0);
+    line(img, vertices[iii], vertices[0], CV_RGB(0,0,0), 2, CV_AA, 0);
   }
 }
 
@@ -279,7 +279,6 @@ void patternRandRGB(Mat& src, Mat& dest, int gsize, bool animate) {
   }
 }
 
-
 void rainbowFill(Mat src, Mat dest, Mat thresMask, int gsize, bool animate) {
   int nRows = dest.rows;
   int nCols = dest.cols;
@@ -364,5 +363,102 @@ void rainbowFill(Mat src, Mat dest, Mat thresMask, int gsize, bool animate) {
         }
   }
   cvtColor(dest, dest, CV_HSV2BGR, 0);
+}
 
+void effect1(Mat &src,Mat &dest,int gsize){
+  int i,j,channels,k,gc,nRows,nCols,cnt;
+  uchar *p,*q;
+  dest=src.clone();
+  nRows=dest.rows;
+  nCols=dest.cols*dest.channels();
+  channels=dest.channels();
+  gc=gsize*channels;
+  int start=(float(gsize)*(4.0/5.0)*channels);
+  for(i=0;i<nRows;i++){
+    p=dest.ptr(i);
+    for(j=0;j<nCols;j+=gc){
+      if((p[j]<255)&&(p[j+gc]<255)){
+        cnt=0;
+        for(k=j+start;k<(j+gc);k++){
+          cnt++;
+          p[k]=(((2*(gc-start)-cnt)/float(2*(gc-start)))*p[k])+(float(cnt)/float(2*(gc-start))*p[k+gc]);
+        }
+        for(k=j+gc;k<(j+2*gc-start);k++){
+          cnt++;
+          p[k]=(((2*(gc-start)-cnt)/float(2*(gc-start)))*p[k-gc])+(float(cnt)/float(2*(gc-start))*p[k]);
+        }
+      }
+    }
+  }
+  gc=gsize;
+  start=(float(gsize)*(4.0/5.0));
+  for(i=0;i<nRows;i+=gc){
+    p=dest.ptr(i);
+    for(j=0;j<nCols;j++){
+      if((p[j]<255)&&(p[j+gc]<255)){
+        cnt=0;
+        for(k=i+start;k<(i+gc);k++){
+          p=dest.ptr(k);
+          q=dest.ptr(k+gc);
+          cnt++;
+          p[j]=((2*(gc-start)-cnt)/float(2*(gc-start)))*p[j]+float(cnt)/float(2*(gc-start))*q[j];
+        }
+        for(k=i+gc;k<(i+2*gc-start);k++){
+          p=dest.ptr(k-gc);
+          q=dest.ptr(k);
+          cnt++;
+          q[j]=((2*(gc-start)-cnt)/float(2*(gc-start)))*p[j]+float(cnt)/float(2*(gc-start))*q[j];
+        }
+      }
+    }
+  }
+}
+
+void effect2(Mat &src,Mat &dest,int gsize){
+  int i,j,channels,k,gc,nRows,nCols,cnt;
+  uchar *p,*q;
+  dest=src.clone();
+  nRows=dest.rows;
+  nCols=dest.cols*dest.channels();
+  channels=dest.channels();
+  gc=gsize*channels;
+  int start=(float(gsize)*(0/5.0)*channels);
+  for(i=0;i<nRows;i++){
+    p=dest.ptr(i);
+    for(j=0;j<nCols;j+=gc){
+      if((p[j]<255)&&(p[j+gc]<255)){
+        cnt=0;
+        for(k=j+start;k<(j+gc);k++){
+          cnt++;
+          p[k]=(((2*(gc-start)-cnt)/float(2*(gc-start)))*p[k])+(float(cnt)/float(2*(gc-start))*p[k+gc]);
+        }
+        for(k=j+gc;k<(j+2*gc-start);k++){
+          cnt++;
+          p[k]=(((2*(gc-start)-cnt)/float(2*(gc-start)))*p[k-gc])+(float(cnt)/float(2*(gc-start))*p[k]);
+        }
+      }
+    }
+  }
+  gc=gsize;
+  start=(float(gsize)*(0/5.0));
+  for(i=0;i<nRows;i+=gc){
+    p=dest.ptr(i);
+    for(j=0;j<nCols;j++){
+      if((p[j]<255)&&(p[j+gc]<255)){
+        cnt=0;
+        for(k=i+start;k<(i+gc);k++){
+          p=dest.ptr(k);
+          q=dest.ptr(k+gc);
+          cnt++;
+          p[j]=((2*(gc-start)-cnt)/float(2*(gc-start)))*p[j]+float(cnt)/float(2*(gc-start))*q[j];
+        }
+        for(k=i+gc;k<(i+2*gc-start);k++){
+          p=dest.ptr(k-gc);
+          q=dest.ptr(k);
+          cnt++;
+          q[j]=((2*(gc-start)-cnt)/float(2*(gc-start)))*p[j]+float(cnt)/float(2*(gc-start))*q[j];
+        }
+      }
+    }
+  }
 }

@@ -2,7 +2,7 @@
 #include "isothetic.hpp"
 
 int main(int argc, char** argv) {
-  Mat image, result, final, test;
+  Mat image, result, final, test, e1, e2;
   int size;
   int opt;
   Scalar color;
@@ -57,11 +57,17 @@ int main(int argc, char** argv) {
 
   Mat pattern(nRows,nCols, CV_8UC3, Scalar(255,255,255));
   patternRandRGB(result, pattern, size, true);
-  imshow("Result", pattern);
+  imshow("Random fill", pattern);
 
-  // test
+  effect1(pattern,e1,size);
+  imshow("Normal Gradient",e1);
+
+  effect2(pattern,e2,size);
+  imshow("Softer Gradient",e2);
+
   rainbowFill(image, test, result, size, true);
-  imshow("Test", test);
+  imshow("Rainbow", test);
   waitKey(0);
+
   return 0;
 }
