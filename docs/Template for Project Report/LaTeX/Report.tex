@@ -3,11 +3,15 @@
 %                           IIEST, Shibpur
 %                           Copyright 2015
 %% ----------------------------------------------------------------
+
 \documentclass[12pt]{article}
+
 % Packages to be added here
 \usepackage{geometry}
 \geometry{verbose,a4paper,tmargin=30mm,bmargin=30mm,lmargin=30mm,rmargin=20mm}
 \usepackage{graphics}
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{setspace}
 \usepackage{url}
 \usepackage{epsfig}
@@ -17,8 +21,10 @@
 \usepackage{multirow}
 \usepackage{multicol}
 \usepackage{algorithm}
-\usepackage{algorithmic}
+\usepackage{algpseudocode}
 \usepackage{hyperref}
+\usepackage{wrapfig}
+\usepackage{float}
 
 % For definitions, theorems, lemmas, proofs, corollaries and observations
 \newtheorem{DEF}{Definition}
@@ -35,15 +41,17 @@
 
 \makeatletter
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\graphicspath{ {./images/} }
+
+% LyX specific LaTeX commands.
 \newcommand{\LyX}{L\kern-.1667em\lower.25em\hbox{Y}\kern-.125emX\spacefactor1000}
 
 \makeatother
 
+
+
+
 \begin{document}
-
-
-
 
 % Title page
 \begin{titlepage}
@@ -65,10 +73,10 @@ by \\
 \hspace{.05cm} {\large \bf{Firoz Rahaman}}\\
 \vspace {0.3cm}
 \hspace{.05cm} Under the supervision of\\
-\hspace{.05cm} {\large \bf{Arindam Biswas}}\\
+\hspace{.05cm} {\large \bf{Dr. Arindam Biswas}}\\
 \vspace {0.8cm}
 Roll number: Hx02, Hy34, Hx01\\
-Registration number: 110812005, 110812025, 110812047 of 2013-14\\
+Registration number: 110812005, 110812025, 110812047 of 2014-15\\
 B.E. 3rd year\\
 \vspace*{0.7cm}
 \begin{figure}[h]
@@ -108,13 +116,13 @@ INDIAN INSTITUTE OF ENGINEERING SCIENCE AND TECHNOLOGY, SHIBPUR\\
  \huge \textbf{CERTIFICATE}
  \vspace{1cm}
 \end{center}
-This is to certify that the work presented in this report entitled ``ALGORITHMIC ART USING RANDOM ISOTHETIC POLYGONS'', submitted by Binayak Ghosh, Ronit Halder and Firoz Rahaman having the examination roll numbers 111208005, 111208025 and 111208047 respectively has been carried out under my supervision for the partial fulfilment of the degree of Bachelor of Technology in Information Technology during the session 2014-15 in the Department of Information Technology, Indian Institute of Engineering Science and Technology, Shibpur.\\
+This is to certify that the work presented in this report entitled ``ALGORITHMIC ART USING RANDOM ISOTHETIC POLYGONS", submitted by Binayak Ghosh, Ronit Halder and Firoz Rahaman having the examination roll numbers 111208005, 111208025 and 111208047 respectively has been carried out under my supervision for the partial fulfilment of the degree of Bachelor of Technology in Information Technology during the session 2014-15 in the Department of Information Technology, Indian Institute of Engineering Science and Technology, Shibpur.\\
 \vspace{1.5cm}
 
 \begin{minipage}[t]{0.48\linewidth}
 \begin{flushleft}
 ---------------------------------------\\
-Arindam Biswas\\
+Dr. Arindam Biswas\\
 Associate Professor\\
 Department of Information Technology\\
 Indian Institute of Engineering Science and Technology, Shibpur
@@ -123,7 +131,7 @@ Indian Institute of Engineering Science and Technology, Shibpur
 \begin{minipage}[t]{0.48\linewidth}
 \begin{flushright}
 ---------------------------------------\\
-Arindam Biswas\\
+Dr. Arindam Biswas\\
 Head of the Department\\
 Department of Information Technology\\
 Indian Institute of Engineering Science and Technology, Shibpur
@@ -156,7 +164,7 @@ Date: 08/05/2015
 \end{center}
 \vspace{2cm}
 Being a novice in the area of research, this project would not have been possible without constant
-supervision of Prof. Arindam Biswas. The combinatorial algorithm for construction of isothetic cover of digital objects, developed by Prof. Arindam Biswas and his colleagues, formed the basis of our project. Also, the works of Mike Bostock in the field of algorithmic visualisation have served as great source for inspiration.\\
+supervision of Prof. Arindam Biswas. The combinatorial algorithm for construction of isothetic cover of digital objects, developed by Prof. Arindam Biswas and his colleagues\textsuperscript{\cite{ref1}}, formed the basis of our project. Also, the works of Mike Bostock\textsuperscript{\cite{ref2}} in the field of algorithmic visualisation have served as great source for inspiration.\\
 \vspace{2.5cm}
 
 \begin{minipage}[t]{0.48\linewidth}
@@ -194,13 +202,26 @@ This report summarizes the work done as part of a semester project under the sup
 
 % Other front pages
 \pagenumbering{roman}
+
+
+
+
 \newpage
+
+
+
+
 \tableofcontents
+
+
+
+
 \newpage
+
+
 \newenvironment{mydef}[1]{\begin{definition} #1 \mbox{\\}
 \rm}{\end{definition}}
 \pagenumbering{arabic}
-
 
 
 
@@ -215,22 +236,21 @@ Isothetic polygons can be used to generate isothetic covers of binary images whi
 
 
 
-
 \newpage
-
 
 
 
 
 \section{PRELIMINARIES AND DEFINITIONS}
 \begin{DEF}
-  \textnormal{Digital Plane}: The digital plane, $\textbf{Z}^2$, is the set of all points having integer coordinates in the real plane $\textbf{R}^2$.A point in the digital plane is called a digital point,or called a pixel in case of a digital image. Henceforth, the term "point" and "digital point" will be interchangeably used.
+  \textnormal{Digital Plane}: The digital plane, $\textbf{Z}^2$, is the set of all points having integer coordinates in the real plane $\textbf{R}^2$.A point in the digital plane is called a digital point,or called a pixel in case of a digital image. Henceforth, the term ``point" and ``digital point" will be interchangeably used.
 \end{DEF}
 
 
 \begin{DEF}
 \textnormal{Digital grid}: A grid \textbf{G} := (\textbf{H},\textbf{V}) consists of a set \textbf{H} of horizontal grid lines and a set \textbf{V} of vertical grid lines, where, \textbf{H} = \{...,${\textit{l}}_H$(\textit{j-2g}),${\textit{l}}_H$(\textit{j-g}), ${\textit{l}}_H$(\textit{j}), ${\textit{l}}_H$(\textit{j+g}), ${\textit{l}}_H$(\textit{j+2g}),...\}{$\subset $$\textbf{Z}^2$} and \textbf{V}=\{...,${\textit{l}}_V$(\textit{j-2g}),${\textit{l}}_V$(\textit{j-g}), ${\textit{l}}_V$(\textit{j}), ${\textit{l}}_V$(\textit{j+g}), ${\textit{l}}_V$(\textit{j+2g}),...\}{$\subset $$\textbf{Z}^2$}, for a grid size,\textit{g} $\in$ {$\textbf{Z}^+$}. Here, ${\textit{l}}_H$ := \{(\textit{ $\i^{'}$},\textit{j}):\textit{$\i^{'}$}$\in$ \textbf{Z} denotes the horizontal grid line and ${\textit{l}}_V$ := \{(\textit{i},\textit{ $\j^{'}$}):\textit{$\j^{'}$}$\in$ \textbf{Z} denotes the vertical grid line intersecting at point (\textit{i},\textit{j})$\in$ $\textbf{Z}^2$,called the grid point,where i and j multiples of g.
 \end{DEF}
+
 
 \begin{DEF}
 \textnormal{Grid segment}: A grid segment is the set of points on a grid line between and inclusive of two consecutive grid point.Thus,the horizontal grid segment belonging to ${\textit{l}}_H$(\textit{j}) and lying between two consecutive vertical grid lines, ${\textit{l}}_V$(\textit{i}) and ${\textit{l}}_V$(\textit{i}+\textit{j}),is  \textit{$s_j^{i}$} =\{(\textit{ $\i^{'}$},\textit{j})$\in$ ${\textit{l}}_H$(\textit{j}):\textit{i}$\leq$\textit{$i^{'}$}$\leq$\textit{i}+\textit{g}\}.Similarly,the vertical the vertical grid segment belonging to ${\textit{l}}_V$(\textit{i}) between ${\textit{l}}_H$(\textit{j}) and ${\textit{l}}_V$(\textit{i}+\textit{j}), is \textit{$s_i^{j}$} =\{(\textit{i},\textit{ $\j^{'}$})$\in$ ${\textit{l}}_H$(\textit{j}):\textit{j}$\leq$\textit{$j^{'}$}$\leq$\textit{j}+\textit{g}\}.
@@ -240,16 +260,32 @@ Isothetic polygons can be used to generate isothetic covers of binary images whi
 \begin{DEF}
 \textnormal{Unit grid block (UGB)}: The horizontal digital line ${\textit{l}}_H$(\textit{j}) divides $\textbf{Z}^2$ into half-planes ,which are given by  \textit{$h_H^{+}$}(\textit{j}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\j^{'}$}$\geq$\textit{j}\} and  \textit{$h_H^{-}$}(\textit{j}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\j^{'}$}$\leq$\textit{j}\}. Similarly, ${\textit{l}}_V$(\textit{i}) divides \textbf{$Z^{2}$} into two half-planes, which are \textit{$h_V^{+}$}(\textit{i}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\i^{'}$}$\geq$\textit{i}\} and  \textit{$h_V^{-}$}(\textit{j}):=\{(\textit{ $\i^{'}$},\textit{ $\j^{'}$})$\in$ $\textbf{Z}^2$:\textit{$\i^{'}$}$\leq$\textit{i}\}. Then the set, given by (\textit{$h_V^{+}$}(\textit{i})$\cap$\textit{$h_V^{-}$}(\textit{i}+\textit{g})$\cap$\textit{$h_H^{+}$}(\textit{j})$\cap$\textit{$h_H^{-}$}(\textit{j}+\textit{g})),is defined as the unit grid block,UGB(\textit{i},\textit{j}).The interior of \textit{$U_{1}$} :=UGB(\textit{i},\textit{j}) is given by \textit{$U_{1}$} \ (\textit{$s_{i}^{j}$}$\cup$\textit{$s_{i+g}^{j}$}$\cup$ \textit{$s_{i}^{j}$}$\cup$\textit{$s_{i+g}^{j}$}). Hence, for a given grid point, qði; jÞ, there are four neighbouring UGBs, namely, \textit{$U_{1}$} :=UGB(\textit{i},\textit{j}),\textit{$U_{2}$} :=UGB(\textit{i-g},\textit{j}),\textit{$U_{3}$} :=UGB(\textit{i-g},\textit{j-g}) and \textit{$U_{4}$} :=UGB(\textit{i-g},\textit{j}).
 \end{DEF}
- 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.45]{UGB}
+	\caption{Unit Grid blocks}
+	\label{fig:fig_ugb}
+\end{figure}
 
 \begin{DEF}
 \textnormal{Isothetic polygon}: An isothetic polygon \textit{P} is a simple polygon of finite size in \textbf{$Z^{2}$} whose alternative sides are subsets of the members of \textbf{H} and \textbf{V}.The polygon \textit{P},hence given by a finite set of UGBs,is represented by the sequence of its vertices,which are grid points.The border \textit{$B_{P}$} of \textit{P} is the set of points belonging to its sides.The interior of \textit{P} is the set of points in the union of its constituting UGBs excluding the border of P.
 \end{DEF}
-
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.8]{Isothet}
+	\caption{Isothetic cover}
+	\label{fig:fig_isocover}
+\end{figure}
 
 \begin{DEF}
 \textnormal{Outer isothetic cover}: The outer (isothetic) cover (OIC), denoted by $\bar{P}$(\textit{S}), is a set of outer polygons and (outer) hole polygons, such that the region, given by the union of the outer polygons minus the union of the interiors of the hole polygons, contains a UGB if and only if it has object occupancy (i.e., has a nonempty intersection with S).
 \end{DEF}
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.3]{isocover}
+	\caption{Isothetic cover}
+	\label{fig:fig_isocover}
+\end{figure}
 
 
 \newpage
@@ -263,51 +299,59 @@ To generate outer isothetic cover from a given input image. Divide the isothetic
 
 \section{PROCESSES USED}
 \subsection{Genarate Isothetic Cover}
-We used the combinatorial algorithm developed by Arindam Biswas, Partha Bhowmick and Bhargab B. Bhattacharya as stated in their paper ``Construction of isothetic covers of a digital object: A combinatorial approach"\textsuperscript{\cite{lamport94}} to construct an outer isothetic cover from a given binary image. We then divided the isothetic cover into Unit Grid Blocks (UGBs) and animated the steps to create a nice visualisation. The following figure show different phases of the animation: 
+We used the combinatorial algorithm developed by Arindam Biswas, Partha Bhowmick and Bhargab B. Bhattacharya as stated in their paper {\em ``Construction of isothetic covers of a digital object: A combinatorial approach"\textsuperscript{\cite{ref1}}} to construct an outer isothetic cover from a given binary image. We then divided the isothetic cover into Unit Grid Blocks (UGBs) and animated the steps to create a nice visualisation. The following figure show different phases of the animation: 
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\centering
+		\includegraphics[width=\textwidth ]{cover_anim1}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\centering
+		\includegraphics[width=\textwidth ]{cover_anim2}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\centering
+		\includegraphics[width=\textwidth ]{cover_anim4}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\centering
+		\includegraphics[width=\textwidth ]{cover_anim6}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\centering
+		\includegraphics[width=\textwidth ]{cover_anim8}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\centering
+		\includegraphics[width=\textwidth ]{cover_anim10}
+	\end{subfigure}
+	\caption{Steps, generating isothetic cover}
+	\label{fig:animals}
+\end{figure}
+\vspace{10cm}
+The following figure shows the final isothetic cover that is generated:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{cover_final}
+	\caption{Generated isothetic cover}
+	\label{fig:fig_cover_final}
+\end{figure}
+
+The detailed steps of the Isothetic cover generation process can found here\cite{ref1}.
 
 
+
+ 
 \subsection{Fill UGBs with Random Color}
-
-\begin{algorithm}[htp]
-\caption{blurr-effect}
-\textbf{Input:} I(The image as 2D Matrix),gsize(Grid size).\par 
-\textbf{Output:} Modified Image I with blur effect.\par
-\textbf{Steps of the algorithm:}
-\begin{algorithmic}[1]
-\STATE ncols $\longleftarrow$ width of input image I
-\STATE nrows $\longleftarrow$ hight of input image I
-\STATE start $\longleftarrow$ 4/5 part of gsize
-\FOR{i $\longleftarrow$ 1 to nrows}
-	\STATE P $\longleftarrow$ ith row of image as a list of pixels
-	\IF{j th element of P is not a white pixel}
-		\STATE count $\longleftarrow$ 0
-		\FOR{i $\longleftarrow$ (j+start) to (j+gsize-1)}		
-			\STATE count $\longleftarrow$ count+1
-			\STATE $P_k$$\longleftarrow$$P_k$$\times$((2$\times$(gsize-start)-count)/2$\times$(gc-start)+((cnt/2)$\times$(gc-start))$\times$ $P_{(k+gsize)}$
-		\ENDFOR
-		\FOR{i $\longleftarrow$ (j+1) to (j+2$\times$gsize)}		
-			\STATE count $\longleftarrow$ count+1
-			\STATE $P_{k}$$\longleftarrow$$P_{(k-gsize)}$$\times$((2$\times$(gsize-start)-count)/2$\times$(gc-start)+((cnt/2)$\times$(gc-start))$\times$ $P_{k}$
-		\ENDFOR
-   \ENDIF
-\ENDFOR
-\FOR{i $\longleftarrow$ 1 to ncols}
-	\STATE P $\longleftarrow$ $i^{th}$ column of image as a list of pixels
-	\IF{$i^{th}$ element of P is not a white pixel}
-		\STATE count $\longleftarrow$ 0
-		\FOR{j $\longleftarrow$ (i+start+1) to (i+gsize)}		
-			\STATE count $\longleftarrow$ count+1
-			\STATE $P_k$$\longleftarrow$$P_k$$\times$((2$\times$(gsize-start)-count)/2$\times$(gc-start)+((cnt/2)$\times$(gc-start))$\times$ $P_{(k+gsize)}$
-		\ENDFOR
-		\FOR{j $\longleftarrow$ (i+1) to (i+2$\times$gsize)}		
-			\STATE count $\longleftarrow$ count+1
-			\STATE $P_{k}$$\longleftarrow$$P_{(k-gsize)}$$\times$((2$\times$(gsize-start)-count)/2$\times$(gc-start)+((cnt/2)$\times$(gc-start))$\times$ $P_{k}$
-		\ENDFOR
-   \ENDIF
-\ENDFOR
-\end{algorithmic}
-\label{Algorithm:2}
-\end{algorithm}
+Now that we have the Isothetic Cover of the given image, our job is to now fill each UGB of the Isothetic Cover with a random color. The following are the steps to achieve this.
 
 \begin{algorithm}[htp]
 \caption{Random-fill}
@@ -315,26 +359,199 @@ We used the combinatorial algorithm developed by Arindam Biswas, Partha Bhowmick
 \textbf{Output:} Modified image I after filling random color.\par
 \textbf{Steps of the algorithm:}
 \begin{algorithmic}[1]
-\STATE nugb $\longleftarrow$ no of vertical ugb in image
-\FOR{i $\longleftarrow$ 1 to nugb}
-    \STATE p $\longleftarrow$ $i^{th}$ horizontal row of UGB's in I
-    \FOR{ for each UGB in p}
-    		\IF{the UGB is inside the isothetic cover}
-    			\STATE fill the ugb with a random color
-    		\ENDIF
-	\ENDFOR
-\ENDFOR
-\IF{Condition}
-    \STATE Do this
-\ELSE
-    \STATE Do that
-\ENDIF
+\State nugb $\longleftarrow$ no of vertical ugb in image
+\For{i $\longleftarrow$ 1 to nugb}
+    \State p $\longleftarrow$ $i^{th}$ horizontal row of UGB's in I
+    \For{ for each UGB in p}
+    		\If{the UGB is inside the isothetic cover}
+    			\State fill the ugb with a random color
+    		\EndIf
+	\EndFor
+\EndFor
 \end{algorithmic}
 \label{Algorithm:2}
 \end{algorithm}
+
 \newpage
 
+In this case also we animate the steps. The following figures show the result of the above mentioned process:
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{rand_fill1}
+	\caption{Isothetic cover generation}
+	\label{fig:fig_rand_fill1}
+\end{figure}
+
+
+\begin{figure}[H]
+	\begin{subfigure}[b]{0.23\textwidth}
+		\includegraphics[width=\textwidth, height=\textwidth]{rand_fill2}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.23\textwidth}
+		\includegraphics[width=\textwidth, height=\textwidth]{rand_fill4}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.23\textwidth}
+		\includegraphics[width=\textwidth, height=\textwidth]{rand_fill5}
+	\end{subfigure}\centering
+	~
+	\begin{subfigure}[b]{0.23\textwidth}
+		\includegraphics[width=\textwidth, height=\textwidth]{rand_fill6}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.23\textwidth}
+		\includegraphics[width=\textwidth, height=\textwidth]{rand_fill7}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.23\textwidth}
+		\includegraphics[width=\textwidth, height=\textwidth]{rand_fill9}
+	\end{subfigure}
+	\caption{Steps, random fill animation}
+	\label{fig:fig_random_fill}
+\end{figure}
+\newpage
+Here are some more examples:
+\begin{figure}[H]
+	\begin{subfigure}[b]{0.5\textwidth}
+		\includegraphics[width=\textwidth, height=\textwidth]{rand_fill_final1}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.5\textwidth}
+		\includegraphics[width=\textwidth, height=\textwidth]{rand_fill_final2}
+	\end{subfigure}
+	\caption{Random fill results}
+	\label{fig:fig_random_fill}
+\end{figure}
+
+\vspace{8cm}
+\subsection{Random color with blurred edges}
+Filling the UGBs with random color gave us a pattern in which the color change between two adjoining UGBs was abrubt. So our next step was to make a smooth transition of color between adjoining UGBs. The following steps describe how this is achieved:
+\begin{algorithm}[htp]
+\caption{blurr-effect}
+\textbf{Input:} I(The image as 2D Matrix),gsize(Grid size).\par 
+\textbf{Output:} Modified Image I with blur effect.\par
+\textbf{Steps of the algorithm:}
+\begin{algorithmic}[1]
+\State ncols $\longleftarrow$ width of input image I
+\State nrows $\longleftarrow$ hight of input image I
+\State start $\longleftarrow$ 4/5 part of gsize
+\For{i $\longleftarrow$ 1 to nrows}
+	\State P $\longleftarrow$ ith row of image as a list of pixels
+	\If{j th element of P is not a white pixel}
+		\State count $\longleftarrow$ 0
+		\For{i $\longleftarrow$ (j+start) to (j+gsize-1)}		
+			\State count $\longleftarrow$ count+1
+			\State $P_k$$\longleftarrow$$P_k$$\times$((2$\times$(gsize-start)-count)/2$\times$(gc-start)+((cnt/2)$\times$(gc-start))$\times$ $P_{(k+gsize)}$
+		\EndFor
+		\For{i $\longleftarrow$ (j+1) to (j+2$\times$gsize)}		
+			\State count $\longleftarrow$ count+1
+			\State $P_{k}$$\longleftarrow$$P_{(k-gsize)}$$\times$((2$\times$(gsize-start)-count)/2$\times$(gc-start)+((cnt/2)$\times$(gc-start))$\times$ $P_{k}$
+		\EndFor
+   \EndIf
+\EndFor
+\For{i $\longleftarrow$ 1 to ncols}
+	\State P $\longleftarrow$ $i^{th}$ column of image as a list of pixels
+	\If{$i^{th}$ element of P is not a white pixel}
+		\State count $\longleftarrow$ 0
+		\For{j $\longleftarrow$ (i+start+1) to (i+gsize)}		
+			\State count $\longleftarrow$ count+1
+			\State $P_k$$\longleftarrow$$P_k$$\times$((2$\times$(gsize-start)-count)/2$\times$(gc-start)+((cnt/2)$\times$(gc-start))$\times$ $P_{(k+gsize)}$
+		\EndFor
+		\For{j $\longleftarrow$ (i+1) to (i+2$\times$gsize)}		
+			\State count $\longleftarrow$ count+1
+			\State $P_{k}$$\longleftarrow$$P_{(k-gsize)}$$\times$((2$\times$(gsize-start)-count)/2$\times$(gc-start)+((cnt/2)$\times$(gc-start))$\times$ $P_{k}$
+		\EndFor
+   \EndIf
+\EndFor
+\end{algorithmic}
+\label{Algorithm:2}
+\end{algorithm}
+
+\newpage
+These figures show the final result of the above process:
+
+\begin{figure}[H]
+	\begin{subfigure}[b]{\textwidth}
+		\includegraphics[width=\textwidth]{blur1}
+		\caption{left: normal, right: blurred}
+	\end{subfigure}
+	
+	\begin{subfigure}[b]{\textwidth}
+		\includegraphics[width=\textwidth]{blur2}
+		\caption{left: normal, right: blurred}
+	\end{subfigure}
+	\caption{Random fill with blured edges}
+	\label{fig:fig_random_fill}
+\end{figure}
+
+\vspace{2cm}
+\subsection{Motion Blur effect}
+A slight modification of the procedure discussed in section 4.3 can be used to produce a motion blur like effect. Some examples of this effect are shown in the following figures:
+
+\begin{figure}[H]
+	\begin{subfigure}[b]{\textwidth}
+		\includegraphics[width=\textwidth]{motion_blur1}
+		\caption{left: normal, right: blurred}
+	\end{subfigure}
+	
+	\begin{subfigure}[b]{\textwidth}
+		\includegraphics[width=\textwidth]{motion_blur2}
+		\caption{left: normal, right: blurred}
+	\end{subfigure}
+	\caption{Random fill with motion blur}
+	\label{fig:fig_random_fill}
+\end{figure}
+
+\vspace{2cm}
+\subsection{Rainbow effect}
+Next we tried to fill the UGBs with colors in such a way that it produces a rainbow like color gradient. For this purpose we assumed that each UGB in the isothetic cover is a node of a graph. The four adjacent UGBs are considered to be the adjacent connected node.
+
+Now we traversed the graph using a random traversal algorithm. As we visited each node, we assigned a color to that node whose hue distance was proportional to the distance of the node from the root.
+
+Given an Image I and its isothetic cover T, the following algorithm is used to achieve the desired effect:
+\begin{algorithm}
+\emph{}\caption{Rainbow Fill}
+	\begin{algorithmic}[1]
+	\Procedure{RFILL}{$I$, $T$, $gsize$}
+	\State F $\longleftarrow$ $\phi$
+	\State distance $\longleftarrow$ 150
+	\State p $\longleftarrow$ top left UGB of I such that $p \in T$
+	\State visited[p] $\longleftarrow$ true
+	\State F $\longleftarrow$ $F \cup p $
+	\While{F in not empdy}
+		\State q $\longleftarrow$ pick a random UGB from F
+		\State F $\longleftarrow$ $F - q$
+		\State N $\longleftarrow$ the UGB just above q
+		\State S $\longleftarrow$ the UGB just below q
+		\State E $\longleftarrow$ the UGB to the right of q
+		\State W $\longleftarrow$ the UGB to the left of q
+		\If{$N \in T$ and visited[N] $\neq$ true }
+			\State F $\longleftarrow$ $F \cup N$
+			\State visited[F] $\longleftarrow$ true 
+		\EndIf
+		\If{$N \in T$ and visited[N] $\neq$ true }
+			\State F $\longleftarrow$ $F \cup N$
+			\State visited[F] $\longleftarrow$ true 
+		\EndIf
+		\If{$N \in T$ and visited[N] $\neq$ true }
+			\State F $\longleftarrow$ $F \cup N$
+			\State visited[F] $\longleftarrow$ true 
+		\EndIf
+		\If{$N \in T$ and visited[N] $\neq$ true }
+			\State F $\longleftarrow$ $F \cup N$
+			\State visited[F] $\longleftarrow$ true 
+		\EndIf
+		\State distance $\longleftarrow$ $distance+0.3$
+		\State HSV $\longleftarrow$ ($distance \bmod 255$, 180, 180)
+		\State setColor(q, HSV)
+	\EndWhile
+	\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+\newpage
 
 
 
@@ -362,32 +579,36 @@ State the concluding remarks and mention the future scopes and limitations of th
 
 
 \begin{thebibliography}{9}
-	\bibitem{lamport94}
-	Leslie Lamport,
-	\emph{\LaTeX: a document preparation system},
-	Addison Wesley, Massachusetts,
-	2nd edition,
-	1994.
-
-	\bibitem{lamport95}
-	Arindam Biswas, blabla.
+	{
+		\bibitem{ref1}
+		Arindam Biswas, Partha Bhowmick, Bhargab B. Bhattacharya. 
+		{\bf \em Construction of isothetic covers of a digital object: A combinatorial approach.}\\
+		 J. Vis. Commun. Image R. 21 (2010) 295-310
+	}
 	
+	{
+		\bibitem{ref2}
+		Mike Bostock. {\bf \em Visualizing Algorithms.}\\
+		\url{http://bost.ocks.org/mike/algorithms/}
+	}
+	
+	{
+		\bibitem{ref3}
+		Video Demo for the project\\
+		\url{https://youtu.be/xJzPwb3Q9i4}
+	}
+	
+	{
+		\bibitem{ref4}
+		Project Source Code\\
+		\url{https://github.com/ghoshbinayak/isotheticart}
+	}
 \end{thebibliography}
 
+
+
+
 \newpage
-
-
-% BibTeX users use the following
-% \bibliographystyle{plain}           % basic style
-% \bibliography{Reference}            % name your BibTeX database file
-
-% Non-BibTeX users use the following
-%\begin{thebibliography}{}
-%
-% and use \bibitem to create references. Consult the Instructions
-% for authors for reference list style.
-%
-%\bibitem{} Author. Title. Journal, Volume(Number):Pages, Year
 
 \end{document}
 
