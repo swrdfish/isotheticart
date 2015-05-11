@@ -551,25 +551,65 @@ Given an Image I and its isothetic cover T, the following algorithm is used to a
 	\end{algorithmic}
 \end{algorithm}
 
-\newpage
+The results of the above process are shown in the figures below:
+\begin{figure}[H]
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{rainbow_fill1}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{rainbow_fill2}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{rainbow_fill3}
+	\end{subfigure}\centering
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{rainbow_fill4}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{rainbow_fill5}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{rainbow_fill6}
+	\end{subfigure}
+	\caption{Steps, rainbow fill animation}
+	\label{fig:fig_rainbow_fill}
+\end{figure}
 
+\vspace{2.5cm}
+Here are some more results of the rainbow fill effect:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{rainbow_fill7}
+	\caption{Rainbow fill effect}
+	\label{fig:fig_rainbow_fill2}
+\end{figure}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{rainbow_fill8}
+	\caption{Rainbow fill effect}
+	\label{fig:fig_rainbow_fill2}
+\end{figure}
+\vspace{3cm}
 
-
-\section{EXPERIMENTAL RESULTS}
-Results should be discussed here with appropriate comparison with other existing approaches (if applicable).
-
-
-
-
-\newpage
-
-
-
-
-\section{CONCLUSIONS}
-State the concluding remarks and mention the future scopes and limitations of the project.
-
+\section{Future Work}
+\begin{itemize}
+	{
+	\item Port the interface to Javascritp using the CamanJS library \textsuperscript{\cite{ref6}} so that it can be viewed from a browser.
+	}
+	{
+	\item Add more effects using other graph traversal algorithms like 
+	Randomised Prim's algorithm\textsuperscript{\cite{ref5}}, Randomised Kruskal's algorithm\textsuperscript{\cite{ref7}}, etc
+	}
+	{
+	\item Use a colored image as input and generate isothetic covers for different regiouns of the image. Then superimpose these covers to form a kind of layred effect.
+	}
+\end{itemize}
 
 
 
@@ -603,6 +643,25 @@ State the concluding remarks and mention the future scopes and limitations of th
 		Project Source Code\\
 		\url{https://github.com/ghoshbinayak/isotheticart}
 	}
+	
+	{
+		\bibitem{ref5}
+		CamanJS\\
+		\url{http://camanjs.com/}
+	}
+	
+	{
+		\bibitem{ref6}
+		Randomised Prims Algorithm\\
+		\url{http://en.wikipedia.org/wiki/Maze_generation_algorithm#Randomized_Prim.27s_algorithm}
+	}
+	
+	{
+		\bibitem{ref7}
+		Randomised Kruskal's Algorithm\\
+		\url{http://en.wikipedia.org/wiki/Maze_generation_algorithm#Randomized_Kruskal.27s_algorithm}
+	}
+	
 \end{thebibliography}
 
 
